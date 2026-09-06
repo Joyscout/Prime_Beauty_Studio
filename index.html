@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Beauty Studio - Plataforma de Autônomos e MEIs</title>
+<style>
+  :root{
+    /* Cores Escuras Definidas como Padrão */
+    --black: #0b060a;
+    --black-soft: #150a10;
+    --rose-deep: #9c1450;
+    --rose: #e0417b;
+    --rose-bright: #ff6fa3;
+    --blush: #f6d9e3;
+    
+    /* Variáveis baseadas no tema escuro */
+    --cream: #121214;
+    --ink: #e9e7ea;
+    --ink-soft: #a9a6ad;
+    --surface: #1c1c1f;
+    --border: #2c2c30;
+    --text-muted: #8f8b93;
+    --input-border: #35343a;
+    --chip-bg: #3a383e;
+    --shadow-sm: 0 4px 14px -6px rgba(0,0,0,0.5);
+    --shadow-md: 0 12px 32px -8px rgba(0,0,0,0.6);
+    
+    --line-dark: rgba(224,65,123,0.22);
+    --danger: #c0334f;
+    --success: #2f9e6e;
+    --gold: #b8862f;
+    --teal: #12594d;
+    --teal-bright: #1f9c83;
+    --teal-blush: #1a2e29;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+    --max: 1160px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background: var(--cream); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size:16px; line-height:1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{ font-family: Georgia, 'Times New Roman', serif; font-weight:500; margin:0; }
+  p{ margin:0; }
+  a{ color:inherit; text-decoration:none; }
+  *:focus-visible{ outline: 2px solid var(--rose-bright); outline-offset:2px; }
+
+  .wrap{ max-width: var(--max); margin:0 auto; padding: 0 clamp(16px, 4vw, 24px); }
+  .kicker{ font-size:0.78rem; font-weight:700; letter-spacing:0.04em; color: var(--rose); display:block; margin-bottom:14px; text-transform:uppercase; }
+
+  /* HEADER & NAV */
+  header.nav{
+    position: sticky; top:0; z-index:50;
+    background: rgba(18, 18, 20, 0.94); backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px clamp(16px,4vw,24px); max-width:var(--max); margin:0 auto; gap:12px; }
+  .logo{ font-family: Georgia, serif; font-size: clamp(0.95rem, 3vw, 1.1rem); color:var(--ink); display:flex; align-items:center; gap:9px; cursor:pointer; white-space:nowrap; transition: transform 0.2s ease; }
+  .logo:hover { transform: scale(1.03); }
+  .logo svg{ width:18px; height:18px; stroke:var(--rose-bright); fill:none; stroke-width:1.5; flex-shrink:0; }
+  #welcome-tag{ color:var(--blush); font-size:0.78rem; opacity:0.85; }
+
+  /* BUTTONS */
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:14px 22px; border-radius:999px; font-weight:600; font-size:0.92rem; transition:all .25s ease; cursor:pointer; border:none; width:100%; text-align:center; }
+  .btn:disabled{ cursor: not-allowed; opacity: 0.8; transform: none!important; box-shadow: none!important; }
+  .btn-primary{ background:linear-gradient(135deg, var(--rose-bright), var(--rose-deep)); color:#fff; box-shadow:0 8px 20px -6px rgba(224,65,123,0.55); border: 1px solid transparent; }
+  .btn-primary:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 12px 24px -6px rgba(224,65,123,0.7); border-color: rgba(255, 255, 255, 0.2); }
+  .btn-primary:active:not(:disabled){ transform:translateY(0); }
+  .btn-outline-dark{ background:transparent; color:var(--ink); border:1px solid var(--border); }
+  .btn-outline-dark:hover{ border-color:var(--rose-bright); color:var(--rose-bright); background: rgba(224, 65, 123, 0.05); transform: translateY(-2px); }
+  .btn-stack{ display:flex; flex-direction:column; gap:12px; margin-top:30px; max-width:340px; }
+  .btn-sm{ width:auto; padding:9px 16px; font-size:0.8rem; }
+  .btn-danger{ background:var(--danger); color:#fff; position: relative; }
+  .btn-danger:hover{ opacity:0.9; transform: translateY(-2px); }
+
+  /* EFEITO PULSE NO BOTÃO DE EMERGÊNCIA */
+  @keyframes pulseAlert {
+    0% { box-shadow: 0 0 0 0 rgba(192, 51, 79, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(192, 51, 79, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(192, 51, 79, 0); }
+  }
+  .btn-danger { animation: pulseAlert 2s infinite; }
+
+  /* HERO */
+  .hero{ background: radial-gradient(120% 90% at 20% 0%, #1c0d16 0%, var(--black) 55%, var(--black) 100%); padding: clamp(40px, 8vw, 72px) 0; color:#e9e7ea; }
+  .hero h1{ font-size: clamp(1.7rem, 5vw, 2.5rem); line-height:1.15; }
+  .hero p.lead{ color:var(--blush); opacity:.85; font-size: clamp(0.9rem, 2vw, 1rem); margin-top:16px; max-width:520px; }
+
+  /* PILARES */
+  .pillars{ padding: clamp(32px,6vw,48px) 0 24px; }
+  .pillars-grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .pillar-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow-sm); transition:all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .pillar-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px); border-color: var(--rose); }
+  .pillar-card h3{ font-size:1.15rem; margin-bottom:10px; }
+  .pillar-card p{ font-size:0.9rem; color:var(--ink-soft); }
+  .pillar-tag{ display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.03em; color:#fff; background:var(--rose-deep); padding:4px 12px; border-radius:999px; margin-bottom:12px; }
+
+  /* SELO DE SEGURANÇA */
+  .safety-strip{ background:var(--black); padding: clamp(28px,5vw,40px) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .safety-grid{ display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .safety-item{ text-align:center; color:#e9e7ea; transition: transform 0.3s ease; cursor: default; }
+  .safety-item:hover { transform: translateY(-3px); }
+  .safety-item .safety-icon{ font-size:1.6rem; margin-bottom:8px; }
+  .safety-item p{ font-size:0.78rem; color:var(--blush); opacity:.85; }
+  .safety-item strong{ display:block; font-size:0.85rem; margin-bottom:4px; color: var(--rose-bright); }
+
+  /* VIEW MANAGEMENT & ANIMATIONS */
+  @keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .view-panel{ display: none; padding: clamp(24px,5vw,40px) 0; }
+  .view-panel.active{ display: block; animation: fadeInSlideUp 0.4s ease forwards; }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; animation: fadeInSlideUp 0.3s ease forwards; }
+
+  /* AUTH */
+  .auth-card{
+    background: var(--surface); max-width: 440px; width:100%; margin: 20px auto; padding: clamp(22px,5vw,32px) clamp(18px,5vw,24px);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1px solid var(--border); transition: border-color 0.3s ease;
+  }
+  .auth-card:hover { border-color: rgba(224,65,123,0.4); }
+  .auth-toggle{ display: flex; background: var(--cream); border-radius: 999px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .auth-toggle button{ flex: 1; padding: 10px; border: none; background: transparent; border-radius: 999px; font-weight: 600; font-size: 0.85rem; color: var(--ink); cursor: pointer; transition: all 0.2s; }
+  .auth-toggle button.active{ background: var(--rose-deep); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  
+  /* INPUTS COM GLOW */
+  .form-group{ margin-bottom: 16px; text-align: left; }
+  .form-group label{ display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+  .form-group input, .form-group select{
+    width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--input-border); font-family: inherit; font-size: 0.9rem; outline: none; background:var(--surface); color: var(--ink); transition: all 0.2s ease;
+  }
+  .form-group input:focus, .form-group select:focus{ border-color: var(--rose-bright); box-shadow: 0 0 0 3px rgba(224, 65, 123, 0.15); }
+  .form-msg{ font-size:0.82rem; margin-bottom:12px; padding:10px 12px; border-radius:var(--radius-sm); display:none; }
+  .form-msg.error{ background: rgba(192, 51, 79, 0.2); color: #ff6b87; border: 1px solid rgba(192, 51, 79, 0.4); }
+  .form-msg.success{ background: rgba(47, 158, 110, 0.2); color: #5ee6a8; border: 1px solid rgba(47, 158, 110, 0.4); }
+
+  /* CARDS / DASHBOARDS */
+  .dashboard-grid{ display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .card{ background: var(--surface); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .card:hover { transform: translateY(-3px); border-color: var(--rose); box-shadow: var(--shadow-md); }
+  .card-title{ font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 12px; }
+  
+  /* CHIPS COM HOVER */
+  .chip{ display:inline-block; font-size:0.75rem; font-weight:700; color:var(--ink); background:var(--chip-bg); padding:6px 14px; border-radius:999px; white-space:nowrap; cursor:pointer; transition: all .2s ease; border: 1px solid transparent; }
+  .chip:hover:not(.active){ background: var(--surface); border-color: var(--rose-bright); color: var(--rose-bright); transform: translateY(-2px); }
+  .chip.active{ background:var(--rose); color:#fff; border-color: var(--rose-deep); }
+
+  /* STEP TRACKER */
+  .tracker-pipeline{ display: flex; justify-content: space-between; align-items: center; position: relative; margin: 20px 0; }
+  .tracker-pipeline::before{ content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--input-border); z-index: 1; }
+  .tracker-node{ width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--input-border); z-index: 2; position: relative; transition: all 0.3s ease; }
+  .tracker-node.active{ background: var(--rose); border-color: var(--rose-bright); box-shadow: 0 0 8px rgba(224, 65, 123, 0.4); }
+
+  /* PRO SCOPE (tema profissional em verde-petróleo) */
+  .pro-scope .kicker{ color: var(--teal-bright); }
+  .pro-scope .btn-primary{ background:linear-gradient(135deg, var(--teal-bright), var(--teal)); box-shadow:0 8px 20px -6px rgba(31,156,131,0.45); }
+  .pro-scope .btn-primary:hover:not(:disabled){ box-shadow:0 12px 24px -6px rgba(31,156,131,0.7); }
+  .pro-scope .btn-outline-dark:hover{ border-color:var(--teal-bright); color:var(--teal-bright); background: rgba(31, 156, 131, 0.05); }
+  .pro-scope .card:hover { border-color: var(--teal-bright); }
+  .pro-scope .chip.active{ background:var(--teal); border-color: var(--teal-bright); }
+  .pro-scope .chip:hover:not(.active) { border-color: var(--teal-bright); color: var(--teal-bright); }
+  .pro-scope .tracker-node.active{ background: var(--teal-bright); border-color: var(--teal); box-shadow: 0 0 8px rgba(31, 156, 131, 0.4); }
+  .pro-scope .stat-value{ color: var(--teal-bright); }
+  .pro-scope .app-bottom-nav .nav-item.active{ color: var(--teal-bright); }
+  .pro-scope .form-group input:focus, .pro-scope .chat-input-row input:focus{ border-color: var(--teal-bright); box-shadow: 0 0 0 3px rgba(31, 156, 131, 0.15); }
+
+  /* BOTTOM NAV DINÂMICA */
+  .app-bottom-nav{
+    position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border);
+    display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -6px 18px -10px rgba(0,0,0,0.5);
+  }
+  .nav-item{ display: flex; flex-direction: column; align-items: center; gap:4px; font-size: 0.68rem; color: var(--text-muted); cursor: pointer; padding:4px 10px; border-radius:10px; transition: all .2s ease; background:none; border:none; font-family:inherit; }
+  .nav-item:hover { color: var(--rose-bright); transform: translateY(-2px); }
+  .pro-scope .nav-item:hover { color: var(--teal-bright); }
+  .nav-item.active{ color: var(--rose-bright); font-weight: 700; }
+  .nav-icon{ font-size:1.1rem; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .nav-item:hover .nav-icon, .nav-item.active .nav-icon { transform: scale(1.2); }
+
+  /* CHAT MOCK */
+  .chat-window{ display:flex; flex-direction:column; gap:10px; max-height:340px; overflow-y:auto; padding:14px; background:var(--cream); border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:14px; }
+  .msg{ max-width:75%; padding:10px 14px; border-radius:16px; font-size:0.86rem; animation: fadeInSlideUp 0.3s ease; }
+  .msg.them{ background:var(--surface); border:1px solid var(--border); align-self:flex-start; border-bottom-left-radius:4px; }
+  .msg.me{ background:var(--rose); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; box-shadow: 0 2px 8px rgba(224, 65, 123, 0.2); }
+  .pro-scope .msg.me{ background:var(--teal); box-shadow: 0 2px 8px rgba(31, 156, 131, 0.2); }
+  .chat-input-row{ display:flex; gap:8px; }
+  .chat-input-row input{ flex:1; padding:12px 16px; border-radius:999px; border:1px solid var(--border); font-family:inherit; background:var(--surface); color:var(--ink); transition: all 0.2s ease; }
+  .chat-input-row input:focus{ border-color: var(--rose-bright); box-shadow: 0 0 0 3px rgba(224, 65, 123, 0.15); outline: none; }
+  .chat-input-row button{ padding:12px 20px; border-radius:999px; border:none; background:var(--rose-deep); color:#fff; font-weight:700; cursor:pointer; flex-shrink:0; transition: all 0.2s ease; }
+  .chat-input-row button:hover { transform: scale(1.05); background: var(--rose-bright); }
+  .pro-scope .chat-input-row button{ background:var(--teal); }
+  .pro-scope .chat-input-row button:hover{ background:var(--teal-bright); }
+
+  /* AGENDA & HISTORY */
+  .agenda-item, .history-item{ display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-bottom:1px solid var(--border); transition: background 0.2s ease, transform 0.2s ease; border-radius: 8px; }
+  .agenda-item:hover, .history-item:hover { background: var(--cream); transform: translateX(4px); border-bottom-color: transparent; }
+  .agenda-item:last-child, .history-item:last-child{ border-bottom:none; }
+  .agenda-day{ font-size:0.72rem; font-weight:700; color:var(--teal-bright); text-transform:uppercase; }
+  .status-badge{ font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:999px; background:var(--teal-blush); color:var(--teal-bright); border: 1px solid rgba(31,156,131,0.2); }
+
+  /* TOAST NOTIFICATIONS */
+  #toast-container {
+    position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+  }
+  .toast {
+    background: var(--surface); color: var(--ink); border-left: 4px solid var(--rose); padding: 16px 20px;
+    border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); font-size: 0.9rem; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; max-width: 300px;
+  }
+  .toast.success { border-left-color: var(--success); }
+  .toast.error { border-left-color: var(--danger); }
+  @keyframes slideInToast { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  @media(min-width:768px){
+    .dashboard-grid.two-col{ grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo" onclick="goHome()">
+      <svg viewBox="0 0 24 24"><path d="M6 9a3 3 0 100-6 3 3 0 000 6zM6 21a3 3 0 100-6 3 3 0 000 6zM20 4L8.5 15.5M14.5 14.5L20 20M8.5 8.5L11 11"/></svg>
+      Prime Beauty Studio
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span id="welcome-tag" style="display:none;"></span>
+      <button class="btn btn-outline-dark btn-sm" id="header-auth-btn" onclick="openAuth('login')">Entrar</button>
+    </div>
+  </div>
+</header>
+
+<main id="view-landing" class="view-panel active">
+  <section class="hero">
+    <div class="wrap">
+      <span class="kicker">O IFOOD DA CONTRATAÇÃO DE AUTÔNOMOS</span>
+      <h1>Encontre o MEI certo pra resolver seu problema.</h1>
+      <p class="lead">Contrate profissionais autônomos e MEIs verificados perto de você — de beleza a reparos, limpeza e muito mais. Combinem local e horário direto no chat, o profissional resolve, e você paga com segurança.</p>
+      <div class="btn-stack">
+        <button class="btn btn-primary" onclick="openAuth('signup', 'cliente')">Encontrar profissional</button>
+        <button class="btn btn-outline-dark" onclick="openAuth('signup', 'autonomo')">Quero ser profissional</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="pillars">
+    <div class="wrap">
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <span class="pillar-tag">PARA QUEM CONTRATA</span>
+          <h3>Segurança e praticidade para você</h3>
+          <p>Chega de pesquisar indicação no boca a boca ou contratar alguém sem nenhuma referência segura. Aqui você encontra profissionais verificados para qualquer serviço, combina tudo pelo chat e acompanha cada etapa com curadoria técnica e avaliações reais.</p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-tag">PARA QUEM ATENDE</span>
+          <h3>Autonomia e renda justa para você</h3>
+          <p>Transforme seu ofício em um sustento justo. Sem intermediário abusivo, sem depender da marca de um estabelecimento. Gerencie sua própria agenda, alcance novos clientes e tenha recebimento assegurado pelo seu trabalho.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="safety-strip">
+    <div class="wrap">
+      <div class="safety-grid">
+        <div class="safety-item"><div class="safety-icon">🛡️</div><strong>Curadoria técnica</strong><p>Profissionais avaliadas e verificadas</p></div>
+        <div class="safety-item"><div class="safety-icon">⭐</div><strong>Avaliações reais</strong><p>Feedback de clientes de verdade</p></div>
+        <div class="safety-item"><div class="safety-icon">📍</div><strong>Local combinado no chat</strong><p>Você decide onde o serviço acontece</p></div>
+        <div class="safety-item"><div class="safety-icon">🆘</div><strong>Botão de emergência</strong><p>Ajuda a um toque de distância</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main id="view-auth" class="view-panel">
+  <div class="wrap">
+    <div class="auth-card">
+      <h2 id="auth-title" style="text-align: center; margin-bottom: 20px;">Acessar Conta</h2>
+
+      <div class="auth-toggle">
+        <button id="toggle-cliente" class="active" onclick="setRole('cliente')" type="button">Cliente</button>
+        <button id="toggle-autonomo" onclick="setRole('autonomo')" type="button">Autônomo / MEI</button>
+      </div>
+
+      <form id="form-login" onsubmit="handleAuth(event)">
+        <div class="form-group">
+          <label>E-mail ou Usuário</label>
+          <input id="login-user" type="text" required placeholder="cliente1, prof1 ou seu e-mail cadastrado">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input id="login-pass" type="password" required placeholder="••••••••">
+        </div>
+        <p id="login-msg" class="form-msg error"></p>
+        <button type="submit" class="btn btn-primary" style="margin-top: 4px;">LOGIN</button>
+        <p style="text-align: center; font-size: 0.85rem; margin-top: 16px;">
+          Não tem uma conta? <a href="#" onclick="toggleAuthMode('signup'); return false;" style="color: var(--rose-bright); font-weight:700;">CADASTRE-SE</a>
+        </p>
+      </form>
+
+      <form id="form-signup" style="display: none;" onsubmit="handleAuth(event)">
+        <div class="form-group">
+          <label id="lbl-nome">Nome Completo</label>
+          <input id="signup-nome" type="text" required placeholder="Digite seu nome">
+        </div>
+        <div id="pro-fields" style="display: none;">
+          <div class="form-group">
+            <label>Categoria de Atendimento</label>
+            <select id="signup-categoria">
+              <option>Beleza & Estética</option>
+              <option>Reparos & Manutenção</option>
+              <option>Limpeza & Organização</option>
+              <option>Aulas & Consultoria</option>
+              <option>Eventos & Festas</option>
+              <option>Tecnologia & Suporte</option>
+              <option>Outros serviços</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data de Nascimento</label>
+          <input type="date" required>
+        </div>
+        <div class="form-group">
+          <label id="lbl-doc">CPF</label>
+          <input type="text" required placeholder="000.000.000-00">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Telefone</label>
+            <input type="tel" placeholder="(00) 00000-0000">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>E-mail</label>
+            <input id="signup-email" type="email" required placeholder="email@exemplo.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input id="signup-pass" type="password" required placeholder="Crie uma senha" minlength="3">
+        </div>
+        <div class="form-group">
+          <label>Endereço / Cidade / CEP</label>
+          <input type="text" placeholder="Rua, Número, Cidade - UF">
+        </div>
+        <p id="signup-msg" class="form-msg error"></p>
+        <button type="submit" class="btn btn-primary" style="margin-top: 4px;">CADASTRAR</button>
+        <p style="text-align: center; font-size: 0.85rem; margin-top: 16px;">
+          Já possui conta? <a href="#" onclick="toggleAuthMode('login'); return false;" style="color: var(--rose-bright); font-weight:700;">VOLTAR AO LOGIN</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- ========== DASHBOARD CLIENTE ========== -->
+<main id="view-client-dash" class="view-panel">
+  <div class="wrap" style="padding-bottom: 90px;">
+
+    <div id="client-home" class="tab-panel active" data-group="client">
+      <span class="kicker">TELA INICIAL CLIENTE</span>
+      <h2 id="client-greeting">Explorar Serviços</h2>
+
+      <div class="form-group" style="margin: 20px 0;">
+        <input type="text" id="search-input" placeholder="🔍 Pesquisar por profissional (Ex: Mariana, João)..." onkeyup="filterPros(this.value)">
+      </div>
+
+      <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:20px;">
+        <span class="chip active" onclick="filterCategory(this, 'Beleza')">💇 Beleza</span>
+        <span class="chip" onclick="filterCategory(this, 'Reparos')">🔧 Reparos</span>
+        <span class="chip" onclick="filterCategory(this, 'Limpeza')">🧹 Limpeza</span>
+        <span class="chip" onclick="filterCategory(this, 'Aulas')">📚 Aulas</span>
+        <span class="chip" onclick="filterCategory(this, 'Eventos')">🎉 Eventos</span>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <span class="kicker">ACOMPANHAMENTO DE SERVIÇO ATIVO</span>
+        <p><strong>Serviço #1042</strong> - Penteado & Maquiagem</p>
+        <div class="tracker-pipeline">
+          <div class="tracker-node active"></div>
+          <div class="tracker-node active"></div>
+          <div class="tracker-node"></div>
+          <div class="tracker-node"></div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">💬 Local combinado no chat — Status: Profissional a caminho</p>
+        <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+          <button class="btn btn-danger btn-sm" onclick="triggerEmergency()">🆘 Emergência</button>
+          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('client','client-chat', document.querySelectorAll('#client-bottom-nav .nav-item')[2])">💬 Abrir Chat</button>
+        </div>
+      </div>
+
+      <div class="dashboard-grid" id="pro-cards-container">
+        <div class="card pro-card">
+          <div style="height:120px; background: linear-gradient(45deg, #4a2c3a, #693f53); border-radius:8px; margin-bottom:10px;"></div>
+          <div class="card-title">Mariana Silva - Hair Designer</div>
+          <p>⭐ 4.9 (48 avaliações)</p>
+          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 180,00</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Mariana Silva')">Contratar</button>
+        </div>
+        <div class="card pro-card">
+          <div style="height:120px; background: linear-gradient(45deg, #293c39, #3d5a55); border-radius:8px; margin-bottom:10px;"></div>
+          <div class="card-title">João Reparos Elétricos</div>
+          <p>⭐ 4.8 (63 avaliações)</p>
+          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 120,00</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'João')">Contratar</button>
+        </div>
+        <div class="card pro-card">
+          <div style="height:120px; background: linear-gradient(45deg, #4a2c3a, #693f53); border-radius:8px; margin-bottom:10px;"></div>
+          <div class="card-title">Camila Estética In Home</div>
+          <p>⭐ 5.0 (112 avaliações)</p>
+          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 220,00</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Camila')">Contratar</button>
+        </div>
+        <div class="card pro-card">
+          <div style="height:120px; background: linear-gradient(45deg, #36313f, #51495e); border-radius:8px; margin-bottom:10px;"></div>
+          <div class="card-title">Rafaela Faxina Express</div>
+          <p>⭐ 4.9 (91 avaliações)</p>
+          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 100,00</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Rafaela')">Contratar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="client-history" class="tab-panel" data-group="client">
+      <span class="kicker">HISTÓRICO</span>
+      <h2>Seus Serviços</h2>
+      <div class="card" style="margin-top:20px;">
+        <div class="history-item">
+          <div><strong>Penteado & Maquiagem</strong><p style="font-size:0.8rem; color:var(--text-muted);">Mariana Silva · 12/08</p></div>
+          <span class="status-badge">Concluído</span>
+        </div>
+        <div class="history-item">
+          <div><strong>Reparo Elétrico</strong><p style="font-size:0.8rem; color:var(--text-muted);">João Reparos · 03/08</p></div>
+          <span class="status-badge">Concluído</span>
+        </div>
+        <div class="history-item">
+          <div><strong>Faxina Completa</strong><p style="font-size:0.8rem; color:var(--text-muted);">Rafaela Faxina · 22/07</p></div>
+          <span class="status-badge">Concluído</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="client-chat" class="tab-panel" data-group="client">
+      <span class="kicker">CHAT</span>
+      <h2>Mariana Silva</h2>
+      <div class="chat-window" style="margin-top:16px;">
+        <div class="msg them">Oi! Cheguei no seu bairro, pode me confirmar o endereço exato?</div>
+        <div class="msg me">Claro! Rua das Flores, 123, apto 4B 😊</div>
+        <div class="msg them">Perfeito, chego em 10 minutos!</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="client-chat-input" placeholder="Digite sua mensagem...">
+        <button onclick="sendChatMessage('client')">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-bottom-nav" id="client-bottom-nav">
+    <button class="nav-item active" onclick="switchTab('client','client-home', this)"><span class="nav-icon">🏠</span>Início</button>
+    <button class="nav-item" onclick="switchTab('client','client-history', this)"><span class="nav-icon">📋</span>Histórico</button>
+    <button class="nav-item" onclick="switchTab('client','client-chat', this)"><span class="nav-icon">💬</span>Chat</button>
+    <button class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span>Sair</button>
+  </div>
+</main>
+
+<!-- ========== DASHBOARD PROFISSIONAL ========== -->
+<main id="view-pro-dash" class="view-panel pro-scope">
+  <div class="wrap" style="padding-bottom: 90px;">
+
+    <div id="pro-shop" class="tab-panel active" data-group="pro">
+      <span class="kicker">PAINEL DO AUTÔNOMO / MEI</span>
+      <h2 id="pro-greeting">Minha Loja & Desempenho</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Sua agenda, seu talento, seu recebimento assegurado — sem comissões abusivas.</p>
+
+      <div class="dashboard-grid two-col" style="margin-top:20px;">
+        <div class="card">
+          <span class="kicker">RESUMO FINANCEIRO</span>
+          <div class="card-title">Lucro Mensal</div>
+          <h1 class="stat-value" style="font-size:2rem;">R$ 3.850,00</h1>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">📊 +15% em relação ao mês anterior</p>
+        </div>
+
+        <div class="card">
+          <span class="kicker">Aguardando Confirmação</span>
+          <div class="card-title">Próximo Atendimento</div>
+          <p><strong>Cliente:</strong> Ana Souza</p>
+          <p><strong>Serviço:</strong> Manicure & Pedicure Premium</p>
+          <p><strong>Horário:</strong> Hoje às 14:00</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="confirmAppt(this, 'Ana Souza')">Confirmar Agendamento</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Meus Serviços Cadastrados</span>
+          <button style="background:var(--teal-bright); color:#fff; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition: transform 0.2s ease, background 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="addNewService()">+</button>
+        </div>
+        <div id="pro-services-list">
+          <div class="history-item">
+            <div>
+              <strong>Serviço 1: Escova & Modelagem</strong>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Preço: R$ 90,00 | Duração: 45 min</p>
+            </div>
+          </div>
+          <div class="history-item">
+            <div>
+              <strong>Serviço 2: Maquiagem Social</strong>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Preço: R$ 150,00 | Duração: 60 min</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pro-agenda" class="tab-panel" data-group="pro">
+      <span class="kicker">AGENDA</span>
+      <h2>Seus Próximos Atendimentos</h2>
+      <div class="card" style="margin-top:20px;">
+        <div class="agenda-item">
+          <div><span class="agenda-day">Hoje · 14:00</span><p><strong>Ana Souza</strong> — Manicure & Pedicure</p></div>
+          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
+        </div>
+        <div class="agenda-item">
+          <div><span class="agenda-day">Amanhã · 09:30</span><p><strong>Beatriz Lima</strong> — Escova & Modelagem</p></div>
+          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
+        </div>
+        <div class="agenda-item">
+          <div><span class="agenda-day">Sex, 12/09 · 16:00</span><p><strong>Carla Nunes</strong> — Maquiagem Social</p></div>
+          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pro-chat" class="tab-panel" data-group="pro">
+      <span class="kicker">CHAT</span>
+      <h2>Ana Souza</h2>
+      <div class="chat-window" style="margin-top:16px;">
+        <div class="msg them">Oi! Você atende na minha casa ou eu vou até você?</div>
+        <div class="msg me">Posso ir até você sim! Qual o endereço?</div>
+        <div class="msg them">Rua Aurora, 45 - Centro. Combinado então!</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="pro-chat-input" placeholder="Digite sua mensagem...">
+        <button onclick="sendChatMessage('pro')">Enviar</button>
+      </div>
+    </div>
+
+    <div id="pro-dashboard" class="tab-panel" data-group="pro">
+      <span class="kicker">DASHBOARD</span>
+      <h2>Seu Desempenho</h2>
+      <div class="dashboard-grid two-col" style="margin-top:20px;">
+        <div class="card">
+          <span class="kicker">AVALIAÇÃO MÉDIA</span>
+          <h1 class="stat-value" style="font-size:2rem;">4.9 ⭐</h1>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Baseado em 48 avaliações</p>
+        </div>
+        <div class="card">
+          <span class="kicker">SERVIÇOS CONCLUÍDOS</span>
+          <h1 class="stat-value" style="font-size:2rem;">112</h1>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Nos últimos 12 meses</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-bottom-nav" id="pro-bottom-nav">
+    <button class="nav-item active" onclick="switchTab('pro','pro-shop', this)"><span class="nav-icon">🏬</span>Minha Loja</button>
+    <button class="nav-item" onclick="switchTab('pro','pro-agenda', this)"><span class="nav-icon">📅</span>Agenda</button>
+    <button class="nav-item" onclick="switchTab('pro','pro-chat', this)"><span class="nav-icon">💬</span>Chat</button>
+    <button class="nav-item" onclick="switchTab('pro','pro-dashboard', this)"><span class="nav-icon">📊</span>Dashboard</button>
+    <button class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span>Sair</button>
+  </div>
+</main>
+
+<script>
+  let currentRole = 'cliente';     
+  let currentAuthMode = 'login';
+  let currentUser = null;          
+
+  const memoryFallback = {};
+
+  async function saveUser(key, value) {
+    try {
+      if (typeof window.storage !== 'undefined') {
+        await window.storage.set(key, value, false);
+        return;
+      }
+    } catch (e) {}
+    try {
+      localStorage.setItem(key, value);
+      return;
+    } catch (e) {}
+    memoryFallback[key] = value;
+  }
+
+  async function loadUser(key) {
+    try {
+      if (typeof window.storage !== 'undefined') {
+        const result = await window.storage.get(key, false);
+        return result ? result.value : null;
+      }
+    } catch (e) {}
+    try {
+      const val = localStorage.getItem(key);
+      if (val !== null) return val;
+    } catch (e) {}
+    return memoryFallback[key] || null;
+  }
+
+  const mockUsers = {
+    'cliente1': { senha: '123', role: 'cliente', nome: 'Cliente Demo' },
+    'prof1':    { senha: '123', role: 'autonomo', nome: 'Profissional Demo' }
+  };
+
+  /* ---------- Funções Adicionadas (Toasts e Interações) ---------- */
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3500);
+  }
+
+  function filterPros(query) {
+    const cards = document.querySelectorAll('.pro-card');
+    const lowerQuery = query.toLowerCase();
+    cards.forEach(card => {
+      const title = card.querySelector('.card-title').textContent.toLowerCase();
+      if (title.includes(lowerQuery)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function filterCategory(chipElement, categoryName) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chipElement.classList.add('active');
+    showToast('Filtro aplicado: ' + categoryName, 'success');
+  }
+
+  function solicitHire(btnElement, proName) {
+    showToast(`Solicitação enviada para ${proName}! Vocês poderão combinar os detalhes pelo chat.`, 'success');
+    btnElement.textContent = 'Solicitado';
+    btnElement.style.background = 'var(--success)';
+    btnElement.style.boxShadow = 'none';
+    btnElement.style.borderColor = 'transparent';
+    btnElement.disabled = true;
+  }
+
+  function triggerEmergency() {
+    showToast('🆘 Alerta de segurança acionado! Nossa equipe foi notificada e entrará em contato.', 'error');
+  }
+
+  function confirmAppt(btnElement, clientName) {
+    showToast(`Agendamento com ${clientName} confirmado com sucesso!`, 'success');
+    btnElement.textContent = 'Confirmado';
+    btnElement.style.background = 'var(--success)';
+    btnElement.style.boxShadow = 'none';
+    btnElement.style.borderColor = 'transparent';
+    btnElement.disabled = true;
+  }
+
+  function addNewService() {
+    const serviceName = prompt("Qual o nome do novo serviço?");
+    if (!serviceName) return;
+    const servicePrice = prompt("Qual o valor do serviço? (Ex: R$ 80,00)");
+    if (!servicePrice) return;
+
+    const list = document.getElementById('pro-services-list');
+    const newDiv = document.createElement('div');
+    newDiv.className = 'history-item';
+    newDiv.style.animation = 'fadeInSlideUp 0.3s ease';
+    newDiv.innerHTML = `<div><strong>Novo: ${serviceName}</strong><p style="font-size:0.85rem; color:var(--text-muted);">Preço: ${servicePrice} | Duração: A combinar</p></div>`;
+    list.appendChild(newDiv);
+    
+    showToast('Novo serviço cadastrado com sucesso!', 'success');
+  }
+
+  /* ---------- Navegação e Auth Originais ---------- */
+  function switchView(viewId) {
+    document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goHome(){ switchView('view-landing'); }
+
+  function logout(){
+    currentUser = null;
+    document.getElementById('welcome-tag').style.display = 'none';
+    document.getElementById('header-auth-btn').style.display = 'inline-flex';
+    switchView('view-landing');
+  }
+
+  function switchTab(group, tabId, btnEl) {
+    document.querySelectorAll('.tab-panel[data-group="' + group + '"]').forEach(p => p.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    const nav = document.getElementById(group + '-bottom-nav');
+    if (nav) nav.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openAuth(mode, role = 'cliente') {
+    setRole(role);
+    toggleAuthMode(mode);
+    document.getElementById('login-msg').style.display = 'none';
+    document.getElementById('signup-msg').style.display = 'none';
+    switchView('view-auth');
+  }
+
+  function setRole(role) {
+    currentRole = role;
+    document.getElementById('toggle-cliente').classList.toggle('active', role === 'cliente');
+    document.getElementById('toggle-autonomo').classList.toggle('active', role === 'autonomo');
+
+    const lblNome = document.getElementById('lbl-nome');
+    const lblDoc = document.getElementById('lbl-doc');
+    const proFields = document.getElementById('pro-fields');
+
+    if (role === 'autonomo') {
+      lblNome.textContent = 'Nome Completo / Razão Social ou Empresa';
+      lblDoc.textContent = 'CPF ou CNPJ';
+      proFields.style.display = 'block';
+    } else {
+      lblNome.textContent = 'Nome Completo';
+      lblDoc.textContent = 'CPF';
+      proFields.style.display = 'none';
+    }
+  }
+
+  function toggleAuthMode(mode) {
+    currentAuthMode = mode;
+    const isLogin = mode === 'login';
+    document.getElementById('auth-title').textContent = isLogin ? 'Acessar Conta' : 'Criar Conta';
+    document.getElementById('form-login').style.display = isLogin ? 'block' : 'none';
+    document.getElementById('form-signup').style.display = isLogin ? 'none' : 'block';
+  }
+
+  function showMsg(id, text, type){
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'form-msg ' + type;
+    el.style.display = 'block';
+  }
+
+  async function handleAuth(event) {
+    event.preventDefault();
+    const formId = event.target.id;
+
+    if (formId === 'form-login') {
+      const username = document.getElementById('login-user').value.trim().toLowerCase();
+      const pass = document.getElementById('login-pass').value.trim();
+      
+      let account = mockUsers[username];
+      if (!account) {
+        const raw = await loadUser('user:' + username);
+        if (raw) {
+          try { account = JSON.parse(raw); } catch (e) { account = null; }
+        }
+      }
+
+      if (!account || account.senha !== pass) {
+        showMsg('login-msg', 'Usuário ou senha inválidos.', 'error');
+        return;
+      }
+
+      if (account.role !== currentRole) {
+        const contaTipo = account.role === 'cliente' ? 'Cliente' : 'Autônomo / MEI';
+        showMsg('login-msg', 'Essa conta é de ' + contaTipo + '. Selecione a aba correta acima para entrar.', 'error');
+        return;
+      }
+
+      document.getElementById('login-msg').style.display = 'none';
+      loginSuccess({ nome: account.nome || username, role: account.role, email: username });
+
+    } else {
+      const nome = document.getElementById('signup-nome').value.trim();
+      const email = document.getElementById('signup-email').value.trim().toLowerCase();
+      const pass = document.getElementById('signup-pass').value.trim();
+
+      if (!nome || !email || !pass) {
+        showMsg('signup-msg', 'Preencha nome, e-mail e senha para continuar.', 'error');
+        return;
+      }
+
+      const key = 'user:' + email;
+      const existingRaw = await loadUser(key);
+      if (existingRaw) {
+        showMsg('signup-msg', 'Já existe uma conta com esse e-mail. Faça login.', 'error');
+        return;
+      }
+
+      const record = { senha: pass, role: currentRole, nome: nome };
+      await saveUser(key, JSON.stringify(record));
+
+      document.getElementById('signup-msg').style.display = 'none';
+      loginSuccess({ nome: nome, role: currentRole, email: email });
+    }
+  }
+
+  function loginSuccess({ nome, role, email }) {
+    currentUser = { nome, role, email };
+    const tag = document.getElementById('welcome-tag');
+    tag.textContent = 'Olá, ' + nome;
+    tag.style.display = 'inline';
+    document.getElementById('header-auth-btn').style.display = 'none';
+
+    if (role === 'cliente') {
+      document.getElementById('client-greeting').textContent = 'Olá, ' + nome + ' 👋';
+      switchTab('client', 'client-home', document.querySelectorAll('#client-bottom-nav .nav-item')[0]);
+      switchView('view-client-dash');
+    } else {
+      document.getElementById('pro-greeting').textContent = 'Olá, ' + nome + ' 👋';
+      switchTab('pro', 'pro-shop', document.querySelectorAll('#pro-bottom-nav .nav-item')[0]);
+      switchView('view-pro-dash');
+    }
+    showToast(`Bem-vindo(a), ${nome}!`, 'success');
+  }
+
+  function sendChatMessage(scope) {
+    const input = document.getElementById(scope + '-chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const window_ = input.closest(scope === 'client' ? '#client-chat' : '#pro-chat').querySelector('.chat-window');
+    const div = document.createElement('div');
+    div.className = 'msg me';
+    div.textContent = text;
+    window_.appendChild(div);
+    window_.scrollTop = window_.scrollHeight;
+    input.value = '';
+  }
+</script>
+
+</body>
+</html>
