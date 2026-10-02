@@ -2,853 +2,1201 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prime Beauty Studio - Plataforma de Autônomos e MEIs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Prime Beauty Studio - Plataforma MEI & Autônomos</title>
 <style>
-  :root{
-    /* Cores Escuras Definidas como Padrão */
-    --black: #0b060a;
-    --black-soft: #150a10;
-    --rose-deep: #9c1450;
-    --rose: #e0417b;
-    --rose-bright: #ff6fa3;
-    --blush: #f6d9e3;
+  /* ==========================================================================
+     1. VARIÁVEIS DE DESIGN SYSTEM & TEMA
+     ========================================================================== */
+  :root {
+    --bg-main: #070609;
+    --bg-surface: #13111a;
+    --bg-surface-hover: #1e1a2b;
+    --bg-glass: rgba(22, 19, 32, 0.75);
+    --border: #2e283d;
+    --border-glow: rgba(244, 63, 94, 0.3);
     
-    /* Variáveis baseadas no tema escuro */
-    --cream: #121214;
-    --ink: #e9e7ea;
-    --ink-soft: #a9a6ad;
-    --surface: #1c1c1f;
-    --border: #2c2c30;
-    --text-muted: #8f8b93;
-    --input-border: #35343a;
-    --chip-bg: #3a383e;
-    --shadow-sm: 0 4px 14px -6px rgba(0,0,0,0.5);
-    --shadow-md: 0 12px 32px -8px rgba(0,0,0,0.6);
+    --primary: #f43f5e;
+    --primary-hover: #e11d48;
+    --primary-glow: rgba(244, 63, 94, 0.4);
     
-    --line-dark: rgba(224,65,123,0.22);
-    --danger: #c0334f;
-    --success: #2f9e6e;
-    --gold: #b8862f;
-    --teal: #12594d;
-    --teal-bright: #1f9c83;
-    --teal-blush: #1a2e29;
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 22px;
-    --max: 1160px;
+    --teal: #14b8a6;
+    --teal-hover: #0d9488;
+    --teal-glow: rgba(20, 184, 166, 0.4);
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --shadow-card: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+    --shadow-neon: 0 0 25px rgba(244, 63, 94, 0.25);
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  body{
-    margin:0; background: var(--cream); color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-size:16px; line-height:1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  h1,h2,h3{ font-family: Georgia, 'Times New Roman', serif; font-weight:500; margin:0; }
-  p{ margin:0; }
-  a{ color:inherit; text-decoration:none; }
-  *:focus-visible{ outline: 2px solid var(--rose-bright); outline-offset:2px; }
+  /* ==========================================================================
+     2. RESET & BASE
+     ========================================================================== */
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+  input, select, textarea { font-family: inherit; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
 
-  .wrap{ max-width: var(--max); margin:0 auto; padding: 0 clamp(16px, 4vw, 24px); }
-  .kicker{ font-size:0.78rem; font-weight:700; letter-spacing:0.04em; color: var(--rose); display:block; margin-bottom:14px; text-transform:uppercase; }
+  /* ==========================================================================
+     3. TOAST NOTIFICATIONS
+     ========================================================================== */
+  #toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+  .toast { pointer-events: auto; min-width: 300px; padding: 14px 20px; border-radius: var(--radius-sm); font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px); transform: translateX(120%); animation: slideToastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(255,255,255,0.1); }
+  .toast.success { background: rgba(16, 185, 129, 0.9); color: #fff; border-left: 6px solid #047857; }
+  .toast.error { background: rgba(239, 68, 68, 0.9); color: #fff; border-left: 6px solid #991b1b; }
+  .toast.warning { background: rgba(245, 158, 11, 0.9); color: #fff; border-left: 6px solid #b45309; }
+  @keyframes slideToastIn { to { transform: translateX(0); } }
+  @keyframes slideToastOut { to { transform: translateX(120%); opacity: 0; } }
 
-  /* HEADER & NAV */
-  header.nav{
-    position: sticky; top:0; z-index:50;
-    background: rgba(18, 18, 20, 0.94); backdrop-filter: blur(6px);
-    border-bottom:1px solid var(--border);
-  }
-  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px clamp(16px,4vw,24px); max-width:var(--max); margin:0 auto; gap:12px; }
-  .logo{ font-family: Georgia, serif; font-size: clamp(0.95rem, 3vw, 1.1rem); color:var(--ink); display:flex; align-items:center; gap:9px; cursor:pointer; white-space:nowrap; transition: transform 0.2s ease; }
-  .logo:hover { transform: scale(1.03); }
-  .logo svg{ width:18px; height:18px; stroke:var(--rose-bright); fill:none; stroke-width:1.5; flex-shrink:0; }
-  #welcome-tag{ color:var(--blush); font-size:0.78rem; opacity:0.85; }
-
-  /* BUTTONS */
-  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:14px 22px; border-radius:999px; font-weight:600; font-size:0.92rem; transition:all .25s ease; cursor:pointer; border:none; width:100%; text-align:center; }
-  .btn:disabled{ cursor: not-allowed; opacity: 0.8; transform: none!important; box-shadow: none!important; }
-  .btn-primary{ background:linear-gradient(135deg, var(--rose-bright), var(--rose-deep)); color:#fff; box-shadow:0 8px 20px -6px rgba(224,65,123,0.55); border: 1px solid transparent; }
-  .btn-primary:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 12px 24px -6px rgba(224,65,123,0.7); border-color: rgba(255, 255, 255, 0.2); }
-  .btn-primary:active:not(:disabled){ transform:translateY(0); }
-  .btn-outline-dark{ background:transparent; color:var(--ink); border:1px solid var(--border); }
-  .btn-outline-dark:hover{ border-color:var(--rose-bright); color:var(--rose-bright); background: rgba(224, 65, 123, 0.05); transform: translateY(-2px); }
-  .btn-stack{ display:flex; flex-direction:column; gap:12px; margin-top:30px; max-width:340px; }
-  .btn-sm{ width:auto; padding:9px 16px; font-size:0.8rem; }
-  .btn-danger{ background:var(--danger); color:#fff; position: relative; }
-  .btn-danger:hover{ opacity:0.9; transform: translateY(-2px); }
-
-  /* EFEITO PULSE NO BOTÃO DE EMERGÊNCIA */
-  @keyframes pulseAlert {
-    0% { box-shadow: 0 0 0 0 rgba(192, 51, 79, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(192, 51, 79, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(192, 51, 79, 0); }
-  }
-  .btn-danger { animation: pulseAlert 2s infinite; }
-
-  /* HERO */
-  .hero{ background: radial-gradient(120% 90% at 20% 0%, #1c0d16 0%, var(--black) 55%, var(--black) 100%); padding: clamp(40px, 8vw, 72px) 0; color:#e9e7ea; }
-  .hero h1{ font-size: clamp(1.7rem, 5vw, 2.5rem); line-height:1.15; }
-  .hero p.lead{ color:var(--blush); opacity:.85; font-size: clamp(0.9rem, 2vw, 1rem); margin-top:16px; max-width:520px; }
-
-  /* PILARES */
-  .pillars{ padding: clamp(32px,6vw,48px) 0 24px; }
-  .pillars-grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .pillar-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow-sm); transition:all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .pillar-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px); border-color: var(--rose); }
-  .pillar-card h3{ font-size:1.15rem; margin-bottom:10px; }
-  .pillar-card p{ font-size:0.9rem; color:var(--ink-soft); }
-  .pillar-tag{ display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.03em; color:#fff; background:var(--rose-deep); padding:4px 12px; border-radius:999px; margin-bottom:12px; }
-
-  /* SELO DE SEGURANÇA */
-  .safety-strip{ background:var(--black); padding: clamp(28px,5vw,40px) 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .safety-grid{ display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-  .safety-item{ text-align:center; color:#e9e7ea; transition: transform 0.3s ease; cursor: default; }
-  .safety-item:hover { transform: translateY(-3px); }
-  .safety-item .safety-icon{ font-size:1.6rem; margin-bottom:8px; }
-  .safety-item p{ font-size:0.78rem; color:var(--blush); opacity:.85; }
-  .safety-item strong{ display:block; font-size:0.85rem; margin-bottom:4px; color: var(--rose-bright); }
-
-  /* VIEW MANAGEMENT & ANIMATIONS */
-  @keyframes fadeInSlideUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .view-panel{ display: none; padding: clamp(24px,5vw,40px) 0; }
-  .view-panel.active{ display: block; animation: fadeInSlideUp 0.4s ease forwards; }
-  .tab-panel{ display:none; }
-  .tab-panel.active{ display:block; animation: fadeInSlideUp 0.3s ease forwards; }
-
-  /* AUTH */
-  .auth-card{
-    background: var(--surface); max-width: 440px; width:100%; margin: 20px auto; padding: clamp(22px,5vw,32px) clamp(18px,5vw,24px);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow-md); border: 1px solid var(--border); transition: border-color 0.3s ease;
-  }
-  .auth-card:hover { border-color: rgba(224,65,123,0.4); }
-  .auth-toggle{ display: flex; background: var(--cream); border-radius: 999px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); }
-  .auth-toggle button{ flex: 1; padding: 10px; border: none; background: transparent; border-radius: 999px; font-weight: 600; font-size: 0.85rem; color: var(--ink); cursor: pointer; transition: all 0.2s; }
-  .auth-toggle button.active{ background: var(--rose-deep); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  /* ==========================================================================
+     4. HEADER GLASSMORPHISM
+     ========================================================================== */
+  header { position: sticky; top: 0; z-index: 100; background: var(--bg-glass); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-size: 1.25rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em; }
+  .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--primary), #fb7185); border-radius: var(--radius-sm); display: grid; place-items: center; color: white; font-weight: 800; font-size: 16px; box-shadow: var(--shadow-neon); }
   
-  /* INPUTS COM GLOW */
-  .form-group{ margin-bottom: 16px; text-align: left; }
-  .form-group label{ display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
-  .form-group input, .form-group select{
-    width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--input-border); font-family: inherit; font-size: 0.9rem; outline: none; background:var(--surface); color: var(--ink); transition: all 0.2s ease;
-  }
-  .form-group input:focus, .form-group select:focus{ border-color: var(--rose-bright); box-shadow: 0 0 0 3px rgba(224, 65, 123, 0.15); }
-  .form-msg{ font-size:0.82rem; margin-bottom:12px; padding:10px 12px; border-radius:var(--radius-sm); display:none; }
-  .form-msg.error{ background: rgba(192, 51, 79, 0.2); color: #ff6b87; border: 1px solid rgba(192, 51, 79, 0.4); }
-  .form-msg.success{ background: rgba(47, 158, 110, 0.2); color: #5ee6a8; border: 1px solid rgba(47, 158, 110, 0.4); }
+  /* ==========================================================================
+     5. BOTÕES & CONTROLES
+     ========================================================================== */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 0.9rem; transition: var(--transition); text-align: center; white-space: nowrap; }
+  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; box-shadow: 0 4px 20px var(--primary-glow); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--primary-glow); }
+  .btn-teal { background: linear-gradient(135deg, var(--teal), var(--teal-hover)); color: white; box-shadow: 0 4px 20px var(--teal-glow); }
+  .btn-teal:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--teal-glow); }
+  .btn-outline { border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-main); }
+  .btn-outline:hover { border-color: var(--primary); background: rgba(244, 63, 94, 0.08); color: var(--primary); transform: translateY(-2px); }
+  .btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { opacity: 0.9; }
 
-  /* CARDS / DASHBOARDS */
-  .dashboard-grid{ display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-  .card{ background: var(--surface); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .card:hover { transform: translateY(-3px); border-color: var(--rose); box-shadow: var(--shadow-md); }
-  .card-title{ font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 12px; }
+  /* ==========================================================================
+     6. HERO PARALLAX & LANDING
+     ========================================================================== */
+  .hero-parallax {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+    background-image: linear-gradient(180deg, rgba(7, 6, 9, 0.65) 0%, rgba(7, 6, 9, 0.95) 100%), 
+                      url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+  }
+
+  .hero-parallax::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-main), transparent);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 850px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(244, 63, 94, 0.15); border: 1px solid var(--border-glow); color: var(--primary); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px; backdrop-filter: blur(8px); }
+  .hero-title { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 20px; }
+  .hero-title span { background: linear-gradient(135deg, var(--primary), #fb7185, var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-subtitle { color: var(--text-muted); font-size: clamp(1rem, 2vw, 1.2rem); max-width: 680px; margin: 0 auto 36px; }
+
+  /* COUNTERS / STATS STRIP */
+  .stats-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; max-width: 1000px; margin: 40px auto 0; padding: 24px; background: var(--bg-glass); border: 1px solid var(--border); border-radius: var(--radius-lg); backdrop-filter: blur(12px); box-shadow: var(--shadow-card); }
+  .stat-card { text-align: center; }
+  .stat-card strong { display: block; font-size: 1.8rem; font-weight: 800; color: var(--text-main); }
+  .stat-card p { font-size: 0.82rem; color: var(--text-muted); }
+
+  /* ==========================================================================
+     7. VIEWS CONTROL & TRANSITIONS
+     ========================================================================== */
+  .view-panel { display: none; padding: 40px 20px 120px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .view-panel.active { display: block; }
+  .tab-content { display: none; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ==========================================================================
+     8. AUTHENTICATION & FORMS
+     ========================================================================== */
+  .auth-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; max-width: 480px; margin: 20px auto; box-shadow: var(--shadow-card); position: relative; overflow: hidden; }
+  .auth-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 140px; height: 140px; background: var(--primary-glow); filter: blur(50px); border-radius: 50%; pointer-events: none; }
+  .auth-switch { display: flex; background: var(--bg-main); border-radius: 999px; padding: 4px; margin-bottom: 28px; border: 1px solid var(--border); }
+  .auth-switch button { flex: 1; padding: 10px; border-radius: 999px; font-weight: 600; font-size: 0.88rem; color: var(--text-muted); transition: var(--transition); }
+  .auth-switch button.active { background: var(--primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
   
-  /* CHIPS COM HOVER */
-  .chip{ display:inline-block; font-size:0.75rem; font-weight:700; color:var(--ink); background:var(--chip-bg); padding:6px 14px; border-radius:999px; white-space:nowrap; cursor:pointer; transition: all .2s ease; border: 1px solid transparent; }
-  .chip:hover:not(.active){ background: var(--surface); border-color: var(--rose-bright); color: var(--rose-bright); transform: translateY(-2px); }
-  .chip.active{ background:var(--rose); color:#fff; border-color: var(--rose-deep); }
+  .form-group { margin-bottom: 18px; text-align: left; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
+  .form-control { width: 100%; padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-size: 0.95rem; transition: var(--transition); }
+  .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15); }
+  
+  .pwd-meter { height: 5px; background: var(--border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .pwd-fill { height: 100%; width: 0%; transition: all 0.3s ease; }
+  .pwd-text { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; display: block; }
 
-  /* STEP TRACKER */
-  .tracker-pipeline{ display: flex; justify-content: space-between; align-items: center; position: relative; margin: 20px 0; }
-  .tracker-pipeline::before{ content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--input-border); z-index: 1; }
-  .tracker-node{ width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--input-border); z-index: 2; position: relative; transition: all 0.3s ease; }
-  .tracker-node.active{ background: var(--rose); border-color: var(--rose-bright); box-shadow: 0 0 8px rgba(224, 65, 123, 0.4); }
+  /* ==========================================================================
+     9. DASHBOARDS, CARDS & CHIPS
+     ========================================================================== */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 24px; }
+  .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--transition); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .pro-theme .card:hover { border-color: rgba(20, 184, 166, 0.3); }
+  
+  .card-avatar { height: 140px; border-radius: var(--radius-sm); margin-bottom: 16px; background-size: cover; background-position: center; position: relative; }
+  .card-avatar .fav-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; color: #fff; cursor: pointer; transition: var(--transition); }
+  .card-avatar .fav-btn.active { color: var(--primary); }
+  
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+  .card-subtitle { color: var(--teal); font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+  .card-meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px; flex-grow: 1; }
 
-  /* PRO SCOPE (tema profissional em verde-petróleo) */
-  .pro-scope .kicker{ color: var(--teal-bright); }
-  .pro-scope .btn-primary{ background:linear-gradient(135deg, var(--teal-bright), var(--teal)); box-shadow:0 8px 20px -6px rgba(31,156,131,0.45); }
-  .pro-scope .btn-primary:hover:not(:disabled){ box-shadow:0 12px 24px -6px rgba(31,156,131,0.7); }
-  .pro-scope .btn-outline-dark:hover{ border-color:var(--teal-bright); color:var(--teal-bright); background: rgba(31, 156, 131, 0.05); }
-  .pro-scope .card:hover { border-color: var(--teal-bright); }
-  .pro-scope .chip.active{ background:var(--teal); border-color: var(--teal-bright); }
-  .pro-scope .chip:hover:not(.active) { border-color: var(--teal-bright); color: var(--teal-bright); }
-  .pro-scope .tracker-node.active{ background: var(--teal-bright); border-color: var(--teal); box-shadow: 0 0 8px rgba(31, 156, 131, 0.4); }
-  .pro-scope .stat-value{ color: var(--teal-bright); }
-  .pro-scope .app-bottom-nav .nav-item.active{ color: var(--teal-bright); }
-  .pro-scope .form-group input:focus, .pro-scope .chat-input-row input:focus{ border-color: var(--teal-bright); box-shadow: 0 0 0 3px rgba(31, 156, 131, 0.15); }
+  /* FILTROS / CHIPS */
+  .filters { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 24px; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip { padding: 9px 18px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 999px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: var(--transition); cursor: pointer; color: var(--text-muted); }
+  .chip.active, .chip:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
 
-  /* BOTTOM NAV DINÂMICA */
-  .app-bottom-nav{
-    position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border);
-    display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -6px 18px -10px rgba(0,0,0,0.5);
+  /* ==========================================================================
+     10. AGENDA AVANÇADA (MEI & CLIENTE)
+     ========================================================================== */
+  .agenda-controls { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .agenda-card-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; display: flex; gap: 20px; align-items: center; justify-content: space-between; transition: var(--transition); flex-wrap: wrap; }
+  .agenda-card-item:hover { border-color: var(--teal); background: var(--bg-surface-hover); }
+  .agenda-date-badge { background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; text-align: center; min-width: 90px; }
+  .agenda-date-badge strong { display: block; color: var(--teal); font-size: 1.1rem; }
+  .agenda-date-badge span { font-size: 0.78rem; color: var(--text-muted); }
+  .agenda-status { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .status-pendente { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+  .status-confirmado { background: rgba(20, 184, 166, 0.15); color: var(--teal); border: 1px solid rgba(20, 184, 166, 0.3); }
+  .status-concluido { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+  .status-cancelado { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+  /* ==========================================================================
+     11. PAINEL FINANCEIRO & GRÁFICO MEI
+     ========================================================================== */
+  .fin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 24px; }
+  .fin-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; }
+  .fin-card span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+  .fin-card h2 { font-size: 1.8rem; color: var(--teal); margin-top: 6px; }
+
+  .donut-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; justify-content: center; }
+  .donut-chart { width: 190px; height: 190px; border-radius: 50%; background: conic-gradient(var(--teal) 0% 60%, var(--primary) 60% 85%, var(--border) 85% 100%); position: relative; display: grid; place-items: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+  .donut-hole { width: 130px; height: 130px; background: var(--bg-surface); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+  .donut-hole span { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; }
+  .donut-hole strong { font-size: 1.3rem; color: var(--text-main); }
+
+  /* ==========================================================================
+     12. CHAT PROFISSIONAL (WHATSAPP CLONE ENHANCED)
+     ========================================================================== */
+  .chat-app { display: flex; height: 620px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 20px; box-shadow: var(--shadow-card); }
+  .chat-sidebar { width: 320px; border-right: 1px solid var(--border); background: var(--bg-main); display: flex; flex-direction: column; }
+  .chat-sidebar-header { padding: 18px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 1rem; }
+  .chat-list { flex: 1; overflow-y: auto; }
+  .chat-contact { padding: 16px; display: flex; gap: 12px; align-items: center; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+  .chat-contact:hover, .chat-contact.active { background: var(--bg-surface-hover); border-left: 4px solid var(--primary); }
+  .pro-theme .chat-contact:hover, .pro-theme .chat-contact.active { border-left-color: var(--teal); }
+  .contact-avatar { width: 44px; height: 44px; border-radius: 50%; background: #2a2438; display: grid; place-items: center; font-weight: bold; font-size: 1.1rem; color: var(--primary); position: relative; }
+  .online-badge { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: var(--success); border-radius: 50%; border: 2px solid var(--bg-main); }
+  .contact-info { flex: 1; overflow: hidden; }
+  .contact-name { font-weight: 600; font-size: 0.95rem; }
+  .contact-last { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  
+  .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); }
+  .chat-header { padding: 16px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; font-weight: 600; }
+  .btn-back-chat { display: none; background: none; border: none; color: var(--text-main); font-size: 1.3rem; cursor: pointer; }
+  .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 75%; padding: 12px 18px; border-radius: 18px; font-size: 0.92rem; line-height: 1.45; position: relative; animation: fadeIn 0.2s ease; }
+  .msg.received { background: var(--bg-surface); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); color: var(--text-main); }
+  .msg.sent { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px var(--primary-glow); }
+  .pro-theme .msg.sent { background: linear-gradient(135deg, var(--teal), var(--teal-hover)); box-shadow: 0 4px 15px var(--teal-glow); }
+  .chat-input { padding: 16px 20px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 12px; }
+  .chat-input input { flex: 1; padding: 14px 20px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-main); color: white; }
+
+  @media (max-width: 768px) {
+    .chat-app { height: calc(100vh - 180px); }
+    .chat-sidebar { width: 100%; }
+    .chat-main { display: none; width: 100%; }
+    .chat-app.chat-open .chat-sidebar { display: none; }
+    .chat-app.chat-open .chat-main { display: flex; }
+    .btn-back-chat { display: block; }
   }
-  .nav-item{ display: flex; flex-direction: column; align-items: center; gap:4px; font-size: 0.68rem; color: var(--text-muted); cursor: pointer; padding:4px 10px; border-radius:10px; transition: all .2s ease; background:none; border:none; font-family:inherit; }
-  .nav-item:hover { color: var(--rose-bright); transform: translateY(-2px); }
-  .pro-scope .nav-item:hover { color: var(--teal-bright); }
-  .nav-item.active{ color: var(--rose-bright); font-weight: 700; }
-  .nav-icon{ font-size:1.1rem; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .nav-item:hover .nav-icon, .nav-item.active .nav-icon { transform: scale(1.2); }
 
-  /* CHAT MOCK */
-  .chat-window{ display:flex; flex-direction:column; gap:10px; max-height:340px; overflow-y:auto; padding:14px; background:var(--cream); border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:14px; }
-  .msg{ max-width:75%; padding:10px 14px; border-radius:16px; font-size:0.86rem; animation: fadeInSlideUp 0.3s ease; }
-  .msg.them{ background:var(--surface); border:1px solid var(--border); align-self:flex-start; border-bottom-left-radius:4px; }
-  .msg.me{ background:var(--rose); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; box-shadow: 0 2px 8px rgba(224, 65, 123, 0.2); }
-  .pro-scope .msg.me{ background:var(--teal); box-shadow: 0 2px 8px rgba(31, 156, 131, 0.2); }
-  .chat-input-row{ display:flex; gap:8px; }
-  .chat-input-row input{ flex:1; padding:12px 16px; border-radius:999px; border:1px solid var(--border); font-family:inherit; background:var(--surface); color:var(--ink); transition: all 0.2s ease; }
-  .chat-input-row input:focus{ border-color: var(--rose-bright); box-shadow: 0 0 0 3px rgba(224, 65, 123, 0.15); outline: none; }
-  .chat-input-row button{ padding:12px 20px; border-radius:999px; border:none; background:var(--rose-deep); color:#fff; font-weight:700; cursor:pointer; flex-shrink:0; transition: all 0.2s ease; }
-  .chat-input-row button:hover { transform: scale(1.05); background: var(--rose-bright); }
-  .pro-scope .chat-input-row button{ background:var(--teal); }
-  .pro-scope .chat-input-row button:hover{ background:var(--teal-bright); }
+  /* ==========================================================================
+     13. MODAIS (CONTRATAÇÃO, SERVIÇOS & AVALIAÇÃO)
+     ========================================================================== */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+  .modal-overlay.active { display: grid; opacity: 1; }
+  .modal-content { background: var(--bg-surface); border: 1px solid var(--border); padding: 32px; border-radius: var(--radius-lg); width: 90%; max-width: 480px; transform: translateY(20px); transition: transform 0.3s ease; box-shadow: var(--shadow-card); position: relative; }
+  .modal-overlay.active .modal-content { transform: translateY(0); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-close { background: none; border: none; font-size: 1.6rem; color: var(--text-muted); cursor: pointer; }
 
-  /* AGENDA & HISTORY */
-  .agenda-item, .history-item{ display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-bottom:1px solid var(--border); transition: background 0.2s ease, transform 0.2s ease; border-radius: 8px; }
-  .agenda-item:hover, .history-item:hover { background: var(--cream); transform: translateX(4px); border-bottom-color: transparent; }
-  .agenda-item:last-child, .history-item:last-child{ border-bottom:none; }
-  .agenda-day{ font-size:0.72rem; font-weight:700; color:var(--teal-bright); text-transform:uppercase; }
-  .status-badge{ font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:999px; background:var(--teal-blush); color:var(--teal-bright); border: 1px solid rgba(31,156,131,0.2); }
+  /* NAVEGAÇÃO INFERIOR */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(19, 17, 26, 0.95); backdrop-filter: blur(16px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0 20px; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; transition: var(--transition); }
+  .nav-item.active, .nav-item:hover { color: var(--primary); }
+  .pro-theme .nav-item.active, .pro-theme .nav-item:hover { color: var(--teal); }
+  .nav-icon { font-size: 1.25rem; }
 
-  /* TOAST NOTIFICATIONS */
-  #toast-container {
-    position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+  @media (min-width: 769px) {
+    .bottom-nav { top: 0; bottom: auto; width: auto; right: 28px; left: auto; background: none; border: none; padding: 14px 0; gap: 28px; flex-direction: row; }
+    .nav-item { flex-direction: row; font-size: 0.9rem; }
   }
-  .toast {
-    background: var(--surface); color: var(--ink); border-left: 4px solid var(--rose); padding: 16px 20px;
-    border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); font-size: 0.9rem; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; max-width: 300px;
-  }
-  .toast.success { border-left-color: var(--success); }
-  .toast.error { border-left-color: var(--danger); }
-  @keyframes slideInToast { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-  @media(min-width:768px){
-    .dashboard-grid.two-col{ grid-template-columns: 1fr 1fr; }
-  }
+  .hidden { display: none !important; }
+  .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .section-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
 </style>
 </head>
 <body>
 
+<!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
-<header class="nav">
-  <div class="nav-inner">
-    <div class="logo" onclick="goHome()">
-      <svg viewBox="0 0 24 24"><path d="M6 9a3 3 0 100-6 3 3 0 000 6zM6 21a3 3 0 100-6 3 3 0 000 6zM20 4L8.5 15.5M14.5 14.5L20 20M8.5 8.5L11 11"/></svg>
-      Prime Beauty Studio
-    </div>
-    <div style="display:flex; align-items:center; gap:10px;">
-      <span id="welcome-tag" style="display:none;"></span>
-      <button class="btn btn-outline-dark btn-sm" id="header-auth-btn" onclick="openAuth('login')">Entrar</button>
-    </div>
+<!-- HEADER GLOBAL -->
+<header>
+  <div class="logo" style="cursor:pointer;" onclick="app.goHome()">
+    <div class="logo-icon">P</div> Prime Studio
+  </div>
+  <div id="header-actions">
+    <button class="btn btn-primary" onclick="app.openAuth('login')" id="btn-login-header">Entrar / Cadastrar</button>
+    <nav class="bottom-nav hidden" id="main-nav"></nav>
   </div>
 </header>
 
-<main id="view-landing" class="view-panel active">
-  <section class="hero">
-    <div class="wrap">
-      <span class="kicker">O IFOOD DA CONTRATAÇÃO DE AUTÔNOMOS</span>
-      <h1>Encontre o MEI certo pra resolver seu problema.</h1>
-      <p class="lead">Contrate profissionais autônomos e MEIs verificados perto de você — de beleza a reparos, limpeza e muito mais. Combinem local e horário direto no chat, o profissional resolve, e você paga com segurança.</p>
-      <div class="btn-stack">
-        <button class="btn btn-primary" onclick="openAuth('signup', 'cliente')">Encontrar profissional</button>
-        <button class="btn btn-outline-dark" onclick="openAuth('signup', 'autonomo')">Quero ser profissional</button>
+<!-- VIEW: LANDING PAGE COM PARALLAX HERO -->
+<main id="view-landing" class="view-panel active" style="padding:0; max-width:100%;">
+  <section class="hero-parallax">
+    <div class="hero-content">
+      <span class="hero-badge">✨ A REVOLUÇÃO DOS AUTÔNOMOS E MEIs</span>
+      <h1 class="hero-title">A plataforma certa para <span>contratar e prosperar</span>.</h1>
+      <p class="hero-subtitle">Conectamos clientes exigentes a profissionais autônomos e MEIs qualificados. Agendamento simplificado, chat direto e gestão completa da sua agenda e faturamento.</p>
+      
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="app.openAuth('signup', 'cliente')">Quero Contratar</button>
+        <button class="btn btn-outline" onclick="app.openAuth('signup', 'autonomo')">Sou Profissional (MEI)</button>
       </div>
-    </div>
-  </section>
 
-  <section class="pillars">
-    <div class="wrap">
-      <div class="pillars-grid">
-        <div class="pillar-card">
-          <span class="pillar-tag">PARA QUEM CONTRATA</span>
-          <h3>Segurança e praticidade para você</h3>
-          <p>Chega de pesquisar indicação no boca a boca ou contratar alguém sem nenhuma referência segura. Aqui você encontra profissionais verificados para qualquer serviço, combina tudo pelo chat e acompanha cada etapa com curadoria técnica e avaliações reais.</p>
+      <!-- FAIXA DE ESTATÍSTICAS -->
+      <div class="stats-strip">
+        <div class="stat-card">
+          <strong>+2.500</strong>
+          <p>MEIs Verificados</p>
         </div>
-        <div class="pillar-card">
-          <span class="pillar-tag">PARA QUEM ATENDE</span>
-          <h3>Autonomia e renda justa para você</h3>
-          <p>Transforme seu ofício em um sustento justo. Sem intermediário abusivo, sem depender da marca de um estabelecimento. Gerencie sua própria agenda, alcance novos clientes e tenha recebimento assegurado pelo seu trabalho.</p>
+        <div class="stat-card">
+          <strong>+15.000</strong>
+          <p>Serviços Realizados</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="safety-strip">
-    <div class="wrap">
-      <div class="safety-grid">
-        <div class="safety-item"><div class="safety-icon">🛡️</div><strong>Curadoria técnica</strong><p>Profissionais avaliadas e verificadas</p></div>
-        <div class="safety-item"><div class="safety-icon">⭐</div><strong>Avaliações reais</strong><p>Feedback de clientes de verdade</p></div>
-        <div class="safety-item"><div class="safety-icon">📍</div><strong>Local combinado no chat</strong><p>Você decide onde o serviço acontece</p></div>
-        <div class="safety-item"><div class="safety-icon">🆘</div><strong>Botão de emergência</strong><p>Ajuda a um toque de distância</p></div>
+        <div class="stat-card">
+          <strong>99.4%</strong>
+          <p>Avaliações Positivas</p>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
+<!-- VIEW: AUTENTICAÇÃO -->
 <main id="view-auth" class="view-panel">
-  <div class="wrap">
-    <div class="auth-card">
-      <h2 id="auth-title" style="text-align: center; margin-bottom: 20px;">Acessar Conta</h2>
+  <div class="auth-card">
+    <h2 id="auth-title" style="text-align: center; margin-bottom: 24px; font-size: 1.5rem;">Acessar Conta</h2>
+    
+    <div class="auth-switch">
+      <button id="toggle-cliente" class="active" onclick="app.setRole('cliente')">Cliente</button>
+      <button id="toggle-autonomo" onclick="app.setRole('autonomo')">Profissional (MEI)</button>
+    </div>
 
-      <div class="auth-toggle">
-        <button id="toggle-cliente" class="active" onclick="setRole('cliente')" type="button">Cliente</button>
-        <button id="toggle-autonomo" onclick="setRole('autonomo')" type="button">Autônomo / MEI</button>
+    <!-- FORM LOGIN -->
+    <form id="form-login" onsubmit="app.handleLogin(event)">
+      <div class="form-group">
+        <label>E-mail, CPF ou CNPJ</label>
+        <input type="text" id="login-user" class="form-control" required placeholder="Digite seu e-mail ou documento">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-pass" class="form-control" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Entrar no Sistema</button>
+      <p style="text-align: center; font-size: 0.85rem; margin-top: 20px; color: var(--text-muted);">
+        Não tem conta? <a href="#" onclick="app.toggleAuthMode('signup')" style="color: var(--primary); font-weight: 700;">Cadastre-se grátis</a>
+      </p>
+    </form>
+
+    <!-- FORM SIGNUP -->
+    <form id="form-signup" class="hidden" onsubmit="app.handleSignup(event)">
+      <div class="form-group">
+        <label id="lbl-nome">Nome Completo</label>
+        <input type="text" id="signup-nome" class="form-control" required placeholder="Ex: Mariana Silva">
+      </div>
+      <div class="form-group">
+        <label id="lbl-doc">CPF</label>
+        <input type="text" id="signup-doc" class="form-control" required placeholder="Digite apenas números">
+      </div>
+      
+      <div id="pro-fields" class="hidden">
+        <div class="form-group">
+          <label>Especialidade Principal</label>
+          <select id="signup-categoria" class="form-control">
+            <option>Beleza & Estética</option>
+            <option>Manutenção & Reparos</option>
+            <option>Limpeza & Organização</option>
+            <option>Aulas & Consultorias</option>
+            <option>Tecnologia & Suporte</option>
+          </select>
+        </div>
       </div>
 
-      <form id="form-login" onsubmit="handleAuth(event)">
-        <div class="form-group">
-          <label>E-mail ou Usuário</label>
-          <input id="login-user" type="text" required placeholder="cliente1, prof1 ou seu e-mail cadastrado">
-        </div>
-        <div class="form-group">
-          <label>Senha</label>
-          <input id="login-pass" type="password" required placeholder="••••••••">
-        </div>
-        <p id="login-msg" class="form-msg error"></p>
-        <button type="submit" class="btn btn-primary" style="margin-top: 4px;">LOGIN</button>
-        <p style="text-align: center; font-size: 0.85rem; margin-top: 16px;">
-          Não tem uma conta? <a href="#" onclick="toggleAuthMode('signup'); return false;" style="color: var(--rose-bright); font-weight:700;">CADASTRE-SE</a>
-        </p>
-      </form>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="signup-email" class="form-control" required placeholder="seuemail@exemplo.com">
+      </div>
+      
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="signup-pass" class="form-control" required placeholder="Digite qualquer senha" oninput="app.checkPwdStrength(this.value)">
+        <div class="pwd-meter"><div class="pwd-fill" id="pwd-fill"></div></div>
+        <span class="pwd-text" id="pwd-text"></span>
+      </div>
 
-      <form id="form-signup" style="display: none;" onsubmit="handleAuth(event)">
-        <div class="form-group">
-          <label id="lbl-nome">Nome Completo</label>
-          <input id="signup-nome" type="text" required placeholder="Digite seu nome">
-        </div>
-        <div id="pro-fields" style="display: none;">
-          <div class="form-group">
-            <label>Categoria de Atendimento</label>
-            <select id="signup-categoria">
-              <option>Beleza & Estética</option>
-              <option>Reparos & Manutenção</option>
-              <option>Limpeza & Organização</option>
-              <option>Aulas & Consultoria</option>
-              <option>Eventos & Festas</option>
-              <option>Tecnologia & Suporte</option>
-              <option>Outros serviços</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Data de Nascimento</label>
-          <input type="date" required>
-        </div>
-        <div class="form-group">
-          <label id="lbl-doc">CPF</label>
-          <input type="text" required placeholder="000.000.000-00">
-        </div>
-        <div style="display: flex; gap: 10px;">
-          <div class="form-group" style="flex:1;">
-            <label>Telefone</label>
-            <input type="tel" placeholder="(00) 00000-0000">
-          </div>
-          <div class="form-group" style="flex:1;">
-            <label>E-mail</label>
-            <input id="signup-email" type="email" required placeholder="email@exemplo.com">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Senha</label>
-          <input id="signup-pass" type="password" required placeholder="Crie uma senha" minlength="3">
-        </div>
-        <div class="form-group">
-          <label>Endereço / Cidade / CEP</label>
-          <input type="text" placeholder="Rua, Número, Cidade - UF">
-        </div>
-        <p id="signup-msg" class="form-msg error"></p>
-        <button type="submit" class="btn btn-primary" style="margin-top: 4px;">CADASTRAR</button>
-        <p style="text-align: center; font-size: 0.85rem; margin-top: 16px;">
-          Já possui conta? <a href="#" onclick="toggleAuthMode('login'); return false;" style="color: var(--rose-bright); font-weight:700;">VOLTAR AO LOGIN</a>
-        </p>
-      </form>
-    </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Criar Conta</button>
+      <p style="text-align: center; font-size: 0.85rem; margin-top: 20px; color: var(--text-muted);">
+        Já possui conta? <a href="#" onclick="app.toggleAuthMode('login')" style="color: var(--primary); font-weight: 700;">Fazer login</a>
+      </p>
+    </form>
   </div>
 </main>
 
-<!-- ========== DASHBOARD CLIENTE ========== -->
-<main id="view-client-dash" class="view-panel">
-  <div class="wrap" style="padding-bottom: 90px;">
-
-    <div id="client-home" class="tab-panel active" data-group="client">
-      <span class="kicker">TELA INICIAL CLIENTE</span>
-      <h2 id="client-greeting">Explorar Serviços</h2>
-
-      <div class="form-group" style="margin: 20px 0;">
-        <input type="text" id="search-input" placeholder="🔍 Pesquisar por profissional (Ex: Mariana, João)..." onkeyup="filterPros(this.value)">
-      </div>
-
-      <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:20px;">
-        <span class="chip active" onclick="filterCategory(this, 'Beleza')">💇 Beleza</span>
-        <span class="chip" onclick="filterCategory(this, 'Reparos')">🔧 Reparos</span>
-        <span class="chip" onclick="filterCategory(this, 'Limpeza')">🧹 Limpeza</span>
-        <span class="chip" onclick="filterCategory(this, 'Aulas')">📚 Aulas</span>
-        <span class="chip" onclick="filterCategory(this, 'Eventos')">🎉 Eventos</span>
-      </div>
-
-      <div class="card" style="margin-bottom: 20px;">
-        <span class="kicker">ACOMPANHAMENTO DE SERVIÇO ATIVO</span>
-        <p><strong>Serviço #1042</strong> - Penteado & Maquiagem</p>
-        <div class="tracker-pipeline">
-          <div class="tracker-node active"></div>
-          <div class="tracker-node active"></div>
-          <div class="tracker-node"></div>
-          <div class="tracker-node"></div>
-        </div>
-        <p style="font-size:0.8rem; color:var(--text-muted);">💬 Local combinado no chat — Status: Profissional a caminho</p>
-        <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
-          <button class="btn btn-danger btn-sm" onclick="triggerEmergency()">🆘 Emergência</button>
-          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('client','client-chat', document.querySelectorAll('#client-bottom-nav .nav-item')[2])">💬 Abrir Chat</button>
-        </div>
-      </div>
-
-      <div class="dashboard-grid" id="pro-cards-container">
-        <div class="card pro-card">
-          <div style="height:120px; background: linear-gradient(45deg, #4a2c3a, #693f53); border-radius:8px; margin-bottom:10px;"></div>
-          <div class="card-title">Mariana Silva - Hair Designer</div>
-          <p>⭐ 4.9 (48 avaliações)</p>
-          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 180,00</p>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Mariana Silva')">Contratar</button>
-        </div>
-        <div class="card pro-card">
-          <div style="height:120px; background: linear-gradient(45deg, #293c39, #3d5a55); border-radius:8px; margin-bottom:10px;"></div>
-          <div class="card-title">João Reparos Elétricos</div>
-          <p>⭐ 4.8 (63 avaliações)</p>
-          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 120,00</p>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'João')">Contratar</button>
-        </div>
-        <div class="card pro-card">
-          <div style="height:120px; background: linear-gradient(45deg, #4a2c3a, #693f53); border-radius:8px; margin-bottom:10px;"></div>
-          <div class="card-title">Camila Estética In Home</div>
-          <p>⭐ 5.0 (112 avaliações)</p>
-          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 220,00</p>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Camila')">Contratar</button>
-        </div>
-        <div class="card pro-card">
-          <div style="height:120px; background: linear-gradient(45deg, #36313f, #51495e); border-radius:8px; margin-bottom:10px;"></div>
-          <div class="card-title">Rafaela Faxina Express</div>
-          <p>⭐ 4.9 (91 avaliações)</p>
-          <p style="color:var(--rose-bright); font-weight:700; margin-top:6px;">R$ 100,00</p>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="solicitHire(this, 'Rafaela')">Contratar</button>
-        </div>
-      </div>
+<!-- VIEW: CLIENTE DASHBOARD -->
+<main id="view-client" class="view-panel">
+  <!-- ABA EXPLORAR -->
+  <div id="tab-client-explore" class="tab-content active">
+    <h2 class="section-title">Explorar Profissionais</h2>
+    <p class="section-subtitle">Encontre e contrate autônomos e MEIs verificados.</p>
+    
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="🔍 Pesquisar profissional, especialidade ou cidade..." oninput="app.filterPros(this.value, 'search')">
+    </div>
+    
+    <div class="filters">
+      <div class="chip active" onclick="app.filterPros('Todos', 'category', this)">Todos</div>
+      <div class="chip" onclick="app.filterPros('Beleza & Estética', 'category', this)">💇 Beleza & Estética</div>
+      <div class="chip" onclick="app.filterPros('Manutenção & Reparos', 'category', this)">🔧 Reparos</div>
+      <div class="chip" onclick="app.filterPros('Limpeza & Organização', 'category', this)">🧹 Limpeza</div>
+      <div class="chip" onclick="app.filterPros('Tecnologia & Suporte', 'category', this)">💻 Tecnologia</div>
     </div>
 
-    <div id="client-history" class="tab-panel" data-group="client">
-      <span class="kicker">HISTÓRICO</span>
-      <h2>Seus Serviços</h2>
-      <div class="card" style="margin-top:20px;">
-        <div class="history-item">
-          <div><strong>Penteado & Maquiagem</strong><p style="font-size:0.8rem; color:var(--text-muted);">Mariana Silva · 12/08</p></div>
-          <span class="status-badge">Concluído</span>
-        </div>
-        <div class="history-item">
-          <div><strong>Reparo Elétrico</strong><p style="font-size:0.8rem; color:var(--text-muted);">João Reparos · 03/08</p></div>
-          <span class="status-badge">Concluído</span>
-        </div>
-        <div class="history-item">
-          <div><strong>Faxina Completa</strong><p style="font-size:0.8rem; color:var(--text-muted);">Rafaela Faxina · 22/07</p></div>
-          <span class="status-badge">Concluído</span>
-        </div>
-      </div>
-    </div>
-
-    <div id="client-chat" class="tab-panel" data-group="client">
-      <span class="kicker">CHAT</span>
-      <h2>Mariana Silva</h2>
-      <div class="chat-window" style="margin-top:16px;">
-        <div class="msg them">Oi! Cheguei no seu bairro, pode me confirmar o endereço exato?</div>
-        <div class="msg me">Claro! Rua das Flores, 123, apto 4B 😊</div>
-        <div class="msg them">Perfeito, chego em 10 minutos!</div>
-      </div>
-      <div class="chat-input-row">
-        <input type="text" id="client-chat-input" placeholder="Digite sua mensagem...">
-        <button onclick="sendChatMessage('client')">Enviar</button>
-      </div>
+    <div class="grid" id="client-pro-grid">
+      <!-- Injetado Dinamicamente -->
     </div>
   </div>
 
-  <div class="app-bottom-nav" id="client-bottom-nav">
-    <button class="nav-item active" onclick="switchTab('client','client-home', this)"><span class="nav-icon">🏠</span>Início</button>
-    <button class="nav-item" onclick="switchTab('client','client-history', this)"><span class="nav-icon">📋</span>Histórico</button>
-    <button class="nav-item" onclick="switchTab('client','client-chat', this)"><span class="nav-icon">💬</span>Chat</button>
-    <button class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span>Sair</button>
+  <!-- ABA AGENDA CLIENTE -->
+  <div id="tab-client-agenda" class="tab-content">
+    <h2 class="section-title">Meus Agendamentos</h2>
+    <p class="section-subtitle">Acompanhe o status das suas solicitações.</p>
+    <div id="client-agenda-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+  </div>
+
+  <!-- ABA CHAT CLIENTE -->
+  <div id="tab-client-chat" class="tab-content">
+    <h2 class="section-title">Conversas</h2>
+    <p class="section-subtitle">Combine detalhes diretamente com os profissionais.</p>
+    <div class="chat-app" id="chat-box-client"></div>
   </div>
 </main>
 
-<!-- ========== DASHBOARD PROFISSIONAL ========== -->
-<main id="view-pro-dash" class="view-panel pro-scope">
-  <div class="wrap" style="padding-bottom: 90px;">
+<!-- VIEW: MEI DASHBOARD -->
+<main id="view-pro" class="view-panel pro-theme">
+  <!-- ABA PAINEL DE DESEMPENHO -->
+  <div id="tab-pro-dashboard" class="tab-content active">
+    <h2 class="section-title">Painel de Desempenho</h2>
+    <p class="section-subtitle">Acompanhe seus resultados e métricas financeiras.</p>
 
-    <div id="pro-shop" class="tab-panel active" data-group="pro">
-      <span class="kicker">PAINEL DO AUTÔNOMO / MEI</span>
-      <h2 id="pro-greeting">Minha Loja & Desempenho</h2>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Sua agenda, seu talento, seu recebimento assegurado — sem comissões abusivas.</p>
-
-      <div class="dashboard-grid two-col" style="margin-top:20px;">
-        <div class="card">
-          <span class="kicker">RESUMO FINANCEIRO</span>
-          <div class="card-title">Lucro Mensal</div>
-          <h1 class="stat-value" style="font-size:2rem;">R$ 3.850,00</h1>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">📊 +15% em relação ao mês anterior</p>
-        </div>
-
-        <div class="card">
-          <span class="kicker">Aguardando Confirmação</span>
-          <div class="card-title">Próximo Atendimento</div>
-          <p><strong>Cliente:</strong> Ana Souza</p>
-          <p><strong>Serviço:</strong> Manicure & Pedicure Premium</p>
-          <p><strong>Horário:</strong> Hoje às 14:00</p>
-          <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="confirmAppt(this, 'Ana Souza')">Confirmar Agendamento</button>
-        </div>
+    <div class="fin-grid">
+      <div class="fin-card">
+        <span>Faturamento no Mês</span>
+        <h2>R$ 3.850,00</h2>
       </div>
+      <div class="fin-card">
+        <span>Atendimentos Concluídos</span>
+        <h2 style="color:var(--text-main);">48</h2>
+      </div>
+      <div class="fin-card">
+        <span>Avaliação Média</span>
+        <h2 style="color:var(--warning);">4.9 ⭐</h2>
+      </div>
+    </div>
 
-      <div class="card" style="margin-top:20px;">
-        <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Meus Serviços Cadastrados</span>
-          <button style="background:var(--teal-bright); color:#fff; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition: transform 0.2s ease, background 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="addNewService()">+</button>
-        </div>
-        <div id="pro-services-list">
-          <div class="history-item">
-            <div>
-              <strong>Serviço 1: Escova & Modelagem</strong>
-              <p style="font-size:0.85rem; color:var(--text-muted);">Preço: R$ 90,00 | Duração: 45 min</p>
-            </div>
-          </div>
-          <div class="history-item">
-            <div>
-              <strong>Serviço 2: Maquiagem Social</strong>
-              <p style="font-size:0.85rem; color:var(--text-muted);">Preço: R$ 150,00 | Duração: 60 min</p>
-            </div>
+    <div class="card" style="margin-bottom: 24px;">
+      <h3 style="font-size: 1.1rem; margin-bottom: 20px;">Distribuição de Ganhos</h3>
+      <div class="donut-container">
+        <div class="donut-chart">
+          <div class="donut-hole">
+            <span>Faturamento</span>
+            <strong>R$ 3.850</strong>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div id="pro-agenda" class="tab-panel" data-group="pro">
-      <span class="kicker">AGENDA</span>
-      <h2>Seus Próximos Atendimentos</h2>
-      <div class="card" style="margin-top:20px;">
-        <div class="agenda-item">
-          <div><span class="agenda-day">Hoje · 14:00</span><p><strong>Ana Souza</strong> — Manicure & Pedicure</p></div>
-          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
-        </div>
-        <div class="agenda-item">
-          <div><span class="agenda-day">Amanhã · 09:30</span><p><strong>Beatriz Lima</strong> — Escova & Modelagem</p></div>
-          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
-        </div>
-        <div class="agenda-item">
-          <div><span class="agenda-day">Sex, 12/09 · 16:00</span><p><strong>Carla Nunes</strong> — Maquiagem Social</p></div>
-          <button class="btn btn-outline-dark btn-sm" onclick="switchTab('pro','pro-chat', document.querySelectorAll('#pro-bottom-nav .nav-item')[2])">Chat</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="pro-chat" class="tab-panel" data-group="pro">
-      <span class="kicker">CHAT</span>
-      <h2>Ana Souza</h2>
-      <div class="chat-window" style="margin-top:16px;">
-        <div class="msg them">Oi! Você atende na minha casa ou eu vou até você?</div>
-        <div class="msg me">Posso ir até você sim! Qual o endereço?</div>
-        <div class="msg them">Rua Aurora, 45 - Centro. Combinado então!</div>
-      </div>
-      <div class="chat-input-row">
-        <input type="text" id="pro-chat-input" placeholder="Digite sua mensagem...">
-        <button onclick="sendChatMessage('pro')">Enviar</button>
-      </div>
-    </div>
-
-    <div id="pro-dashboard" class="tab-panel" data-group="pro">
-      <span class="kicker">DASHBOARD</span>
-      <h2>Seu Desempenho</h2>
-      <div class="dashboard-grid two-col" style="margin-top:20px;">
-        <div class="card">
-          <span class="kicker">AVALIAÇÃO MÉDIA</span>
-          <h1 class="stat-value" style="font-size:2rem;">4.9 ⭐</h1>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Baseado em 48 avaliações</p>
-        </div>
-        <div class="card">
-          <span class="kicker">SERVIÇOS CONCLUÍDOS</span>
-          <h1 class="stat-value" style="font-size:2rem;">112</h1>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Nos últimos 12 meses</p>
+        <div style="flex: 1; min-width: 260px;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 0;"><span style="color:var(--teal)">●</span> Serviços Principais (60%)</td>
+              <td style="text-align:right; font-weight:bold;">R$ 2.310,00</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:10px 0;"><span style="color:var(--primary)">●</span> Adicionais/Extras (25%)</td>
+              <td style="text-align:right; font-weight:bold;">R$ 962,50</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;"><span style="color:var(--text-muted)">●</span> Outros (15%)</td>
+              <td style="text-align:right; font-weight:bold;">R$ 577,50</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="app-bottom-nav" id="pro-bottom-nav">
-    <button class="nav-item active" onclick="switchTab('pro','pro-shop', this)"><span class="nav-icon">🏬</span>Minha Loja</button>
-    <button class="nav-item" onclick="switchTab('pro','pro-agenda', this)"><span class="nav-icon">📅</span>Agenda</button>
-    <button class="nav-item" onclick="switchTab('pro','pro-chat', this)"><span class="nav-icon">💬</span>Chat</button>
-    <button class="nav-item" onclick="switchTab('pro','pro-dashboard', this)"><span class="nav-icon">📊</span>Dashboard</button>
-    <button class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span>Sair</button>
+  <!-- ABA AGENDA MEI COMPLETA -->
+  <div id="tab-pro-agenda" class="tab-content">
+    <div class="agenda-controls">
+      <div>
+        <h2 class="section-title">Minha Agenda</h2>
+        <p class="section-subtitle" style="margin-bottom:0;">Gerencie todos os seus compromissos e solicitações.</p>
+      </div>
+      <button class="btn btn-teal" onclick="app.openNewApptModal()">+ Agendar Compromisso Manual</button>
+    </div>
+
+    <div class="filters" style="margin-top: 16px;">
+      <div class="chip active" onclick="app.filterAgenda('Todos', this)">Todos</div>
+      <div class="chip" onclick="app.filterAgenda('Pendente', this)">⏳ Pendentes</div>
+      <div class="chip" onclick="app.filterAgenda('Confirmado', this)">✅ Confirmados</div>
+      <div class="chip" onclick="app.filterAgenda('Concluído', this)">🎉 Concluídos</div>
+    </div>
+
+    <div id="pro-agenda-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+  </div>
+
+  <!-- ABA MEUS SERVIÇOS -->
+  <div id="tab-pro-services" class="tab-content">
+    <div class="agenda-controls">
+      <div>
+        <h2 class="section-title">Meus Serviços Cadastrados</h2>
+        <p class="section-subtitle" style="margin-bottom:0;">Cadastre e altere os valores dos seus serviços.</p>
+      </div>
+      <button class="btn btn-teal" onclick="app.openNewServiceModal()">+ Adicionar Serviço</button>
+    </div>
+
+    <div class="grid" id="pro-services-grid" style="margin-top: 20px;"></div>
+  </div>
+
+  <!-- ABA CHAT MEI -->
+  <div id="tab-pro-chat" class="tab-content">
+    <h2 class="section-title">Central de Mensagens</h2>
+    <p class="section-subtitle">Atenda seus clientes em tempo real.</p>
+    <div class="chat-app" id="chat-box-pro"></div>
   </div>
 </main>
 
+<!-- MODAL: CONTRATAR SERVIÇO -->
+<div class="modal-overlay" id="modal-hire">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="font-size: 1.25rem;">Solicitar Atendimento</h3>
+      <button class="modal-close" onclick="app.closeModal('modal-hire')">&times;</button>
+    </div>
+    <form id="form-hire" onsubmit="app.submitHire(event)">
+      <input type="hidden" id="hire-pro-id">
+      <p style="margin-bottom: 18px; color: var(--text-muted); font-size: 0.9rem;">
+        Profissional: <strong id="hire-pro-name" style="color:var(--text-main);"></strong>
+      </p>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="date" id="hire-date" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Horário Pretendido</label>
+        <input type="time" id="hire-time" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Endereço / Observações do Serviço</label>
+        <textarea id="hire-details" class="form-control" rows="3" required placeholder="Descreva o que precisa ser feito e informe seu endereço..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 10px;">Enviar Solicitação</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: NOVO COMPROMISSO MANUAL (MEI) -->
+<div class="modal-overlay" id="modal-appt">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="font-size: 1.25rem;">Novo Agendamento Manual</h3>
+      <button class="modal-close" onclick="app.closeModal('modal-appt')">&times;</button>
+    </div>
+    <form onsubmit="app.submitManualAppt(event)">
+      <div class="form-group">
+        <label>Nome do Cliente</label>
+        <input type="text" id="manual-client-name" class="form-control" required placeholder="Ex: Ana Souza">
+      </div>
+      <div class="form-group">
+        <label>Descrição do Serviço</label>
+        <input type="text" id="manual-service-desc" class="form-control" required placeholder="Ex: Corte & Modelagem">
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="date" id="manual-date" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Horário</label>
+        <input type="time" id="manual-time" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-teal" style="width:100%; margin-top: 10px;">Salvar na Agenda</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: NOVO SERVIÇO (MEI) -->
+<div class="modal-overlay" id="modal-service">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="font-size: 1.25rem;">Cadastrar Serviço</h3>
+      <button class="modal-close" onclick="app.closeModal('modal-service')">&times;</button>
+    </div>
+    <form onsubmit="app.submitNewService(event)">
+      <div class="form-group">
+        <label>Nome do Serviço</label>
+        <input type="text" id="service-title" class="form-control" required placeholder="Ex: Maquiagem Social Premium">
+      </div>
+      <div class="form-group">
+        <label>Preço Estimado (R$)</label>
+        <input type="text" id="service-price" class="form-control" required placeholder="Ex: 150,00">
+      </div>
+      <div class="form-group">
+        <label>Duração Estimada</label>
+        <input type="text" id="service-duration" class="form-control" required placeholder="Ex: 50 minutos">
+      </div>
+      <button type="submit" class="btn btn-teal" style="width:100%; margin-top: 10px;">Cadastrar Serviço</button>
+    </form>
+  </div>
+</div>
+
+<!-- SCRIPT PRINCIPAL -->
 <script>
-  let currentRole = 'cliente';     
-  let currentAuthMode = 'login';
-  let currentUser = null;          
+const app = {
+  currentUser: null,
+  currentRole: 'cliente',
+  authMode: 'login',
+  activeChatScope: null,
+  activeChatUser: null,
+  
+  // PROFISSIONAIS DEFAULT (PERSISTIDOS NO LOCALSTORAGE)
+  mockPros: [
+    { id: 'p1', nome: 'Mariana Silva', doc: '111', email: 'm@m.com', senha: '123', role: 'autonomo', especialidade: 'Beleza & Estética', isBot: true, bgImg: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80', rating: '4.9', reviews: 48 },
+    { id: 'p2', nome: 'João Reparos', doc: '222', email: 'j@j.com', senha: '123', role: 'autonomo', especialidade: 'Manutenção & Reparos', isBot: true, bgImg: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80', rating: '4.8', reviews: 63 },
+    { id: 'p3', nome: 'Rafaela Organização', doc: '333', email: 'r@r.com', senha: '123', role: 'autonomo', especialidade: 'Limpeza & Organização', isBot: true, bgImg: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80', rating: '5.0', reviews: 112 },
+    { id: 'p4', nome: 'Carlos Suporte Tech', doc: '444', email: 'c@c.com', senha: '123', role: 'autonomo', especialidade: 'Tecnologia & Suporte', isBot: true, bgImg: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80', rating: '4.7', reviews: 30 }
+  ],
 
-  const memoryFallback = {};
+  // AGENDA INICIAL PRÉ-CARREGADA
+  mockAgenda: [
+    { id: 'ag1', proId: 'p1', clienteNome: 'Ana Souza', data: '2026-10-05', hora: '14:00', desc: 'Escova e Maquiagem Social', status: 'Confirmado' },
+    { id: 'ag2', proId: 'p1', clienteNome: 'Beatriz Lima', data: '2026-10-06', hora: '09:30', desc: 'Penteado para Casamento', status: 'Pendente' },
+    { id: 'ag3', proId: 'p1', clienteNome: 'Carla Nunes', data: '2026-10-02', hora: '16:00', desc: 'Manicure e Pedicure', status: 'Concluído' }
+  ],
 
-  async function saveUser(key, value) {
-    try {
-      if (typeof window.storage !== 'undefined') {
-        await window.storage.set(key, value, false);
-        return;
-      }
-    } catch (e) {}
-    try {
-      localStorage.setItem(key, value);
-      return;
-    } catch (e) {}
-    memoryFallback[key] = value;
-  }
+  botReplies: [
+    "Olá! Obrigado pelo contato. Como posso te ajudar?",
+    "Recebi sua solicitação! Qual o melhor horário para você?",
+    "Certo, me envie o seu endereço e os detalhes do serviço.",
+    "Perfeito! Já anotei aqui no meu sistema. Te aguardo no horário combinado!"
+  ],
 
-  async function loadUser(key) {
-    try {
-      if (typeof window.storage !== 'undefined') {
-        const result = await window.storage.get(key, false);
-        return result ? result.value : null;
-      }
-    } catch (e) {}
-    try {
-      const val = localStorage.getItem(key);
-      if (val !== null) return val;
-    } catch (e) {}
-    return memoryFallback[key] || null;
-  }
+  init() {
+    // Inicializa mock pros no LocalStorage se não existirem
+    this.mockPros.forEach(p => {
+      if(!localStorage.getItem('user_' + p.id)) localStorage.setItem('user_' + p.id, JSON.stringify(p));
+    });
 
-  const mockUsers = {
-    'cliente1': { senha: '123', role: 'cliente', nome: 'Cliente Demo' },
-    'prof1':    { senha: '123', role: 'autonomo', nome: 'Profissional Demo' }
-  };
+    // Inicializa agenda no LocalStorage se não existir
+    if(!localStorage.getItem('agenda_data')) {
+      localStorage.setItem('agenda_data', JSON.stringify(this.mockAgenda));
+    }
 
-  /* ---------- Funções Adicionadas (Toasts e Interações) ---------- */
-  function showToast(message, type = 'success') {
+    // Inicializa serviços default no LocalStorage
+    if(!localStorage.getItem('services_data')) {
+      const defServices = [
+        { id: 's1', proId: 'p1', titulo: 'Escova & Modelagem', preco: '90,00', duracao: '45 min' },
+        { id: 's2', proId: 'p1', titulo: 'Maquiagem Social', preco: '150,00', duracao: '60 min' }
+      ];
+      localStorage.setItem('services_data', JSON.stringify(defServices));
+    }
+
+    // Restaura Sessão Ativa
+    const session = localStorage.getItem('session');
+    if (session) {
+      this.currentUser = JSON.parse(session);
+      this.loginSuccess(false);
+    }
+  },
+
+  showAlert(message, type = 'success') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = 'toast ' + type;
-    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${type === 'success' ? '✅' : '⚠️'}</span> ${message}`;
     container.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(100%)';
-      toast.style.transition = 'all 0.3s ease';
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
-  }
-
-  function filterPros(query) {
-    const cards = document.querySelectorAll('.pro-card');
-    const lowerQuery = query.toLowerCase();
-    cards.forEach(card => {
-      const title = card.querySelector('.card-title').textContent.toLowerCase();
-      if (title.includes(lowerQuery)) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  }
-
-  function filterCategory(chipElement, categoryName) {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chipElement.classList.add('active');
-    showToast('Filtro aplicado: ' + categoryName, 'success');
-  }
-
-  function solicitHire(btnElement, proName) {
-    showToast(`Solicitação enviada para ${proName}! Vocês poderão combinar os detalhes pelo chat.`, 'success');
-    btnElement.textContent = 'Solicitado';
-    btnElement.style.background = 'var(--success)';
-    btnElement.style.boxShadow = 'none';
-    btnElement.style.borderColor = 'transparent';
-    btnElement.disabled = true;
-  }
-
-  function triggerEmergency() {
-    showToast('🆘 Alerta de segurança acionado! Nossa equipe foi notificada e entrará em contato.', 'error');
-  }
-
-  function confirmAppt(btnElement, clientName) {
-    showToast(`Agendamento com ${clientName} confirmado com sucesso!`, 'success');
-    btnElement.textContent = 'Confirmado';
-    btnElement.style.background = 'var(--success)';
-    btnElement.style.boxShadow = 'none';
-    btnElement.style.borderColor = 'transparent';
-    btnElement.disabled = true;
-  }
-
-  function addNewService() {
-    const serviceName = prompt("Qual o nome do novo serviço?");
-    if (!serviceName) return;
-    const servicePrice = prompt("Qual o valor do serviço? (Ex: R$ 80,00)");
-    if (!servicePrice) return;
-
-    const list = document.getElementById('pro-services-list');
-    const newDiv = document.createElement('div');
-    newDiv.className = 'history-item';
-    newDiv.style.animation = 'fadeInSlideUp 0.3s ease';
-    newDiv.innerHTML = `<div><strong>Novo: ${serviceName}</strong><p style="font-size:0.85rem; color:var(--text-muted);">Preço: ${servicePrice} | Duração: A combinar</p></div>`;
-    list.appendChild(newDiv);
     
-    showToast('Novo serviço cadastrado com sucesso!', 'success');
-  }
+    setTimeout(() => {
+      toast.style.animation = 'slideToastOut 0.4s forwards';
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
+  },
 
-  /* ---------- Navegação e Auth Originais ---------- */
-  function switchView(viewId) {
+  switchView(viewId) {
     document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  },
 
-  function goHome(){ switchView('view-landing'); }
-
-  function logout(){
-    currentUser = null;
-    document.getElementById('welcome-tag').style.display = 'none';
-    document.getElementById('header-auth-btn').style.display = 'inline-flex';
-    switchView('view-landing');
-  }
-
-  function switchTab(group, tabId, btnEl) {
-    document.querySelectorAll('.tab-panel[data-group="' + group + '"]').forEach(p => p.classList.remove('active'));
+  switchTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    const nav = document.getElementById(group + '-bottom-nav');
-    if (nav) nav.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    if (btnEl) btnEl.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+    
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    if(el) el.classList.add('active');
+    
+    if(tabId.includes('chat')) this.renderChat();
+    if(tabId.includes('agenda')) this.renderAgenda();
+    if(tabId.includes('services')) this.renderProServices();
+  },
 
-  function openAuth(mode, role = 'cliente') {
-    setRole(role);
-    toggleAuthMode(mode);
-    document.getElementById('login-msg').style.display = 'none';
-    document.getElementById('signup-msg').style.display = 'none';
-    switchView('view-auth');
-  }
+  goHome() {
+    if(this.currentUser) {
+      this.switchView(this.currentUser.role === 'cliente' ? 'view-client' : 'view-pro');
+    } else {
+      this.switchView('view-landing');
+    }
+  },
 
-  function setRole(role) {
-    currentRole = role;
+  openAuth(mode, role = 'cliente') {
+    this.setRole(role);
+    this.toggleAuthMode(mode);
+    this.switchView('view-auth');
+  },
+
+  setRole(role) {
+    this.currentRole = role;
     document.getElementById('toggle-cliente').classList.toggle('active', role === 'cliente');
     document.getElementById('toggle-autonomo').classList.toggle('active', role === 'autonomo');
+    
+    document.getElementById('lbl-nome').textContent = role === 'autonomo' ? 'Razão Social / Nome Fantasia' : 'Nome Completo';
+    document.getElementById('lbl-doc').textContent = role === 'autonomo' ? 'CNPJ ou CPF' : 'CPF';
+    document.getElementById('pro-fields').classList.toggle('hidden', role !== 'autonomo');
+  },
 
-    const lblNome = document.getElementById('lbl-nome');
-    const lblDoc = document.getElementById('lbl-doc');
-    const proFields = document.getElementById('pro-fields');
-
-    if (role === 'autonomo') {
-      lblNome.textContent = 'Nome Completo / Razão Social ou Empresa';
-      lblDoc.textContent = 'CPF ou CNPJ';
-      proFields.style.display = 'block';
-    } else {
-      lblNome.textContent = 'Nome Completo';
-      lblDoc.textContent = 'CPF';
-      proFields.style.display = 'none';
-    }
-  }
-
-  function toggleAuthMode(mode) {
-    currentAuthMode = mode;
+  toggleAuthMode(mode) {
+    this.authMode = mode;
     const isLogin = mode === 'login';
     document.getElementById('auth-title').textContent = isLogin ? 'Acessar Conta' : 'Criar Conta';
-    document.getElementById('form-login').style.display = isLogin ? 'block' : 'none';
-    document.getElementById('form-signup').style.display = isLogin ? 'none' : 'block';
-  }
+    document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+    document.getElementById('form-signup').classList.toggle('hidden', isLogin);
+  },
 
-  function showMsg(id, text, type){
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = 'form-msg ' + type;
-    el.style.display = 'block';
-  }
+  checkPwdStrength(val) {
+    let score = 0;
+    if(val.length > 4) score++;
+    if(/[0-9]/.test(val)) score++;
+    if(/[A-Z]/.test(val)) score++;
+    if(/[^a-zA-Z0-9]/.test(val)) score++;
 
-  async function handleAuth(event) {
-    event.preventDefault();
-    const formId = event.target.id;
+    const fill = document.getElementById('pwd-fill');
+    const text = document.getElementById('pwd-text');
+    
+    if(!val) { fill.style.width = '0'; text.textContent = ''; return; }
+    
+    if(score <= 1) { fill.style.width = '25%'; fill.style.background = 'var(--danger)'; text.textContent = 'Fraca'; }
+    else if(score === 2) { fill.style.width = '50%'; fill.style.background = 'var(--warning)'; text.textContent = 'Média'; }
+    else if(score === 3) { fill.style.width = '75%'; fill.style.background = 'var(--teal)'; text.textContent = 'Forte'; }
+    else { fill.style.width = '100%'; fill.style.background = 'var(--success)'; text.textContent = 'Excelente!'; }
+  },
 
-    if (formId === 'form-login') {
-      const username = document.getElementById('login-user').value.trim().toLowerCase();
-      const pass = document.getElementById('login-pass').value.trim();
-      
-      let account = mockUsers[username];
-      if (!account) {
-        const raw = await loadUser('user:' + username);
-        if (raw) {
-          try { account = JSON.parse(raw); } catch (e) { account = null; }
+  handleLogin(e) {
+    e.preventDefault();
+    const userIn = document.getElementById('login-user').value.trim();
+    const passIn = document.getElementById('login-pass').value;
+    
+    let found = null;
+    for(let i=0; i<localStorage.length; i++) {
+      let key = localStorage.key(i);
+      if(key.startsWith('user_')) {
+        let u = JSON.parse(localStorage.getItem(key));
+        if((u.email === userIn || u.doc === userIn) && u.senha === passIn) {
+          found = u; break;
         }
       }
-
-      if (!account || account.senha !== pass) {
-        showMsg('login-msg', 'Usuário ou senha inválidos.', 'error');
-        return;
-      }
-
-      if (account.role !== currentRole) {
-        const contaTipo = account.role === 'cliente' ? 'Cliente' : 'Autônomo / MEI';
-        showMsg('login-msg', 'Essa conta é de ' + contaTipo + '. Selecione a aba correta acima para entrar.', 'error');
-        return;
-      }
-
-      document.getElementById('login-msg').style.display = 'none';
-      loginSuccess({ nome: account.nome || username, role: account.role, email: username });
-
-    } else {
-      const nome = document.getElementById('signup-nome').value.trim();
-      const email = document.getElementById('signup-email').value.trim().toLowerCase();
-      const pass = document.getElementById('signup-pass').value.trim();
-
-      if (!nome || !email || !pass) {
-        showMsg('signup-msg', 'Preencha nome, e-mail e senha para continuar.', 'error');
-        return;
-      }
-
-      const key = 'user:' + email;
-      const existingRaw = await loadUser(key);
-      if (existingRaw) {
-        showMsg('signup-msg', 'Já existe uma conta com esse e-mail. Faça login.', 'error');
-        return;
-      }
-
-      const record = { senha: pass, role: currentRole, nome: nome };
-      await saveUser(key, JSON.stringify(record));
-
-      document.getElementById('signup-msg').style.display = 'none';
-      loginSuccess({ nome: nome, role: currentRole, email: email });
     }
-  }
 
-  function loginSuccess({ nome, role, email }) {
-    currentUser = { nome, role, email };
-    const tag = document.getElementById('welcome-tag');
-    tag.textContent = 'Olá, ' + nome;
-    tag.style.display = 'inline';
-    document.getElementById('header-auth-btn').style.display = 'none';
-
-    if (role === 'cliente') {
-      document.getElementById('client-greeting').textContent = 'Olá, ' + nome + ' 👋';
-      switchTab('client', 'client-home', document.querySelectorAll('#client-bottom-nav .nav-item')[0]);
-      switchView('view-client-dash');
-    } else {
-      document.getElementById('pro-greeting').textContent = 'Olá, ' + nome + ' 👋';
-      switchTab('pro', 'pro-shop', document.querySelectorAll('#pro-bottom-nav .nav-item')[0]);
-      switchView('view-pro-dash');
+    if(!found) {
+      this.showAlert("Credenciais inválidas. Verifique seu usuário e senha.", "error");
+      return;
     }
-    showToast(`Bem-vindo(a), ${nome}!`, 'success');
-  }
+    if(found.role !== this.currentRole) {
+      this.showAlert(`Essa conta pertence a um ${found.role === 'cliente' ? 'Cliente' : 'Profissional'}. Alterne a aba acima.`, "error");
+      return;
+    }
 
-  function sendChatMessage(scope) {
-    const input = document.getElementById(scope + '-chat-input');
+    this.currentUser = found;
+    this.showAlert(`Bem-vindo(a), ${found.nome.split(' ')[0]}!`);
+    this.loginSuccess();
+  },
+
+  handleSignup(e) {
+    e.preventDefault();
+    const id = 'u' + Date.now();
+    const nome = document.getElementById('signup-nome').value.trim();
+    const doc = document.getElementById('signup-doc').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const senha = document.getElementById('signup-pass').value;
+    const esp = this.currentRole === 'autonomo' ? document.getElementById('signup-categoria').value : null;
+
+    for(let i=0; i<localStorage.length; i++) {
+      if(localStorage.key(i).startsWith('user_')) {
+        let u = JSON.parse(localStorage.getItem(localStorage.key(i)));
+        if(u.email === email || u.doc === doc) {
+          this.showAlert("Já existe uma conta com este E-mail ou CPF/CNPJ.", "error");
+          return;
+        }
+      }
+    }
+
+    const newUser = { id, nome, doc, email, senha, role: this.currentRole, especialidade: esp, isBot: false };
+    localStorage.setItem('user_' + id, JSON.stringify(newUser));
+    
+    this.currentUser = newUser;
+    this.showAlert("Conta cadastrada com sucesso!");
+    this.loginSuccess();
+  },
+
+  loginSuccess(showAlertMsg = true) {
+    localStorage.setItem('session', JSON.stringify(this.currentUser));
+    
+    const nav = document.getElementById('main-nav');
+    nav.classList.remove('hidden');
+    document.getElementById('btn-login-header').classList.add('hidden');
+    
+    if(this.currentUser.role === 'cliente') {
+      nav.innerHTML = `
+        <button class="nav-item active" onclick="app.switchTab('tab-client-explore', this)"><span class="nav-icon">🔍</span>Explorar</button>
+        <button class="nav-item" onclick="app.switchTab('tab-client-agenda', this)"><span class="nav-icon">📅</span>Agendamentos</button>
+        <button class="nav-item" onclick="app.switchTab('tab-client-chat', this)"><span class="nav-icon">💬</span>Chat</button>
+        <button class="nav-item" onclick="app.logout()"><span class="nav-icon">🚪</span>Sair</button>
+      `;
+      this.renderProGrid();
+      this.switchView('view-client');
+      this.switchTab('tab-client-explore', nav.children[0]);
+    } else {
+      nav.innerHTML = `
+        <button class="nav-item active" onclick="app.switchTab('tab-pro-dashboard', this)"><span class="nav-icon">📊</span>Painel</button>
+        <button class="nav-item" onclick="app.switchTab('tab-pro-agenda', this)"><span class="nav-icon">📅</span>Agenda</button>
+        <button class="nav-item" onclick="app.switchTab('tab-pro-services', this)"><span class="nav-icon">✂️</span>Serviços</button>
+        <button class="nav-item" onclick="app.switchTab('tab-pro-chat', this)"><span class="nav-icon">💬</span>Chat</button>
+        <button class="nav-item" onclick="app.logout()"><span class="nav-icon">🚪</span>Sair</button>
+      `;
+      this.renderAgenda();
+      this.switchView('view-pro');
+      this.switchTab('tab-pro-dashboard', nav.children[0]);
+    }
+  },
+
+  logout() {
+    this.currentUser = null;
+    localStorage.removeItem('session');
+    document.getElementById('main-nav').classList.add('hidden');
+    document.getElementById('btn-login-header').classList.remove('hidden');
+    
+    document.getElementById('form-login').reset();
+    document.getElementById('form-signup').reset();
+    this.checkPwdStrength('');
+    
+    this.switchView('view-landing');
+    this.showAlert("Você saiu da conta.");
+  },
+
+  // RENDERIZAÇÃO DO CLIENTE (EXPLORAR)
+  renderProGrid(filterCat = 'Todos', searchQuery = '') {
+    const grid = document.getElementById('client-pro-grid');
+    grid.innerHTML = '';
+    
+    let pros = [];
+    for(let i=0; i<localStorage.length; i++) {
+      if(localStorage.key(i).startsWith('user_')) {
+        let u = JSON.parse(localStorage.getItem(localStorage.key(i)));
+        if(u.role === 'autonomo') pros.push(u);
+      }
+    }
+
+    let favs = JSON.parse(localStorage.getItem('favs_' + (this.currentUser ? this.currentUser.id : ''))) || [];
+
+    pros.forEach(pro => {
+      if(filterCat !== 'Todos' && pro.especialidade !== filterCat) return;
+      if(searchQuery && !pro.nome.toLowerCase().includes(searchQuery.toLowerCase()) && !(pro.especialidade || '').toLowerCase().includes(searchQuery.toLowerCase())) return;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      const bgImg = pro.bgImg || 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80';
+      const isFav = favs.includes(pro.id);
+
+      card.innerHTML = `
+        <div class="card-avatar" style="background-image: url('${bgImg}')">
+          <div class="fav-btn ${isFav ? 'active' : ''}" onclick="app.toggleFav('${pro.id}', this)">♥</div>
+        </div>
+        <div class="card-title">${pro.nome}</div>
+        <div class="card-subtitle">${pro.especialidade || 'Autônomo MEI'}</div>
+        <div class="card-meta">⭐ ${pro.rating || '5.0'} (${pro.reviews || 12} avaliações)</div>
+        <button class="btn btn-primary" style="width:100%" onclick="app.openHireModal('${pro.id}', '${pro.nome}')">Contratar Serviço</button>
+      `;
+      grid.appendChild(card);
+    });
+  },
+
+  toggleFav(proId, btnEl) {
+    if(!this.currentUser) return;
+    let key = 'favs_' + this.currentUser.id;
+    let favs = JSON.parse(localStorage.getItem(key)) || [];
+    
+    if(favs.includes(proId)) {
+      favs = favs.filter(id => id !== proId);
+      btnEl.classList.remove('active');
+      this.showAlert("Removido dos favoritos.");
+    } else {
+      favs.push(proId);
+      btnEl.classList.add('active');
+      this.showAlert("Adicionado aos favoritos!");
+    }
+    localStorage.setItem(key, JSON.stringify(favs));
+  },
+
+  filterPros(value, type, chipEl = null) {
+    if(type === 'category') {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chipEl.classList.add('active');
+      this.renderProGrid(value);
+    } else {
+      this.renderProGrid('Todos', value); 
+    }
+  },
+
+  // FLUXO DE CONTRATAÇÃO
+  openHireModal(proId, proName) {
+    document.getElementById('hire-pro-id').value = proId;
+    document.getElementById('hire-pro-name').textContent = proName;
+    document.getElementById('modal-hire').classList.add('active');
+  },
+  
+  closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+  },
+
+  submitHire(e) {
+    e.preventDefault();
+    const proId = document.getElementById('hire-pro-id').value;
+    const date = document.getElementById('hire-date').value;
+    const time = document.getElementById('hire-time').value;
+    const desc = document.getElementById('hire-details').value;
+    
+    const allAgenda = JSON.parse(localStorage.getItem('agenda_data')) || [];
+    const newAppt = {
+      id: 'ag_' + Date.now(),
+      proId: proId,
+      clienteNome: this.currentUser.nome,
+      data: date,
+      hora: time,
+      desc: desc,
+      status: 'Pendente'
+    };
+    allAgenda.push(newAppt);
+    localStorage.setItem('agenda_data', JSON.stringify(allAgenda));
+
+    this.closeModal('modal-hire');
+    document.getElementById('form-hire').reset();
+    this.showAlert("Solicitação enviada com sucesso!");
+  },
+
+  // GERENCIADOR DE AGENDA COMPLETO
+  renderAgenda(filterStatus = 'Todos') {
+    const isPro = this.currentUser.role === 'autonomo';
+    const listEl = document.getElementById(isPro ? 'pro-agenda-list' : 'client-agenda-list');
+    if(!listEl) return;
+    
+    listEl.innerHTML = '';
+    const allAgenda = JSON.parse(localStorage.getItem('agenda_data')) || [];
+    
+    let items = allAgenda;
+    if(isPro) {
+      items = items.filter(a => a.proId === this.currentUser.id || a.proId === 'p1'); // Inclui defaults para demonstração
+    } else {
+      items = items.filter(a => a.clienteNome === this.currentUser.nome);
+    }
+
+    if(filterStatus !== 'Todos') {
+      items = items.filter(a => a.status === filterStatus);
+    }
+
+    if(items.length === 0) {
+      listEl.innerHTML = `<div class="card"><p style="color:var(--text-muted); text-align:center;">Nenhum compromisso encontrado.</p></div>`;
+      return;
+    }
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'agenda-card-item';
+      
+      let statusClass = 'status-pendente';
+      if(item.status === 'Confirmado') statusClass = 'status-confirmado';
+      if(item.status === 'Concluído') statusClass = 'status-concluido';
+      if(item.status === 'Cancelado') statusClass = 'status-cancelado';
+
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div class="agenda-date-badge">
+            <strong>${item.data.split('-').reverse().join('/')}</strong>
+            <span>${item.hora}</span>
+          </div>
+          <div>
+            <h4 style="font-size:1.05rem;">${isPro ? 'Cliente: ' + item.clienteNome : 'Serviço Agendado'}</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">${item.desc}</p>
+          </div>
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="agenda-status ${statusClass}">${item.status}</span>
+          ${isPro && item.status === 'Pendente' ? `<button class="btn btn-teal btn-sm" onclick="app.updateApptStatus('${item.id}', 'Confirmado')">Confirmar</button>` : ''}
+          ${isPro && item.status === 'Confirmado' ? `<button class="btn btn-primary btn-sm" onclick="app.updateApptStatus('${item.id}', 'Concluído')">Concluir</button>` : ''}
+          ${item.status !== 'Cancelado' && item.status !== 'Concluído' ? `<button class="btn btn-outline btn-sm" onclick="app.updateApptStatus('${item.id}', 'Cancelado')">Cancelar</button>` : ''}
+        </div>
+      `;
+      listEl.appendChild(card);
+    });
+  },
+
+  filterAgenda(status, chipEl) {
+    document.querySelectorAll('.agenda-controls + .filters .chip').forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+    this.renderAgenda(status);
+  },
+
+  updateApptStatus(apptId, newStatus) {
+    let allAgenda = JSON.parse(localStorage.getItem('agenda_data')) || [];
+    allAgenda = allAgenda.map(a => {
+      if(a.id === apptId) a.status = newStatus;
+      return a;
+    });
+    localStorage.setItem('agenda_data', JSON.stringify(allAgenda));
+    this.renderAgenda();
+    this.showAlert(`Status atualizado para: ${newStatus}`);
+  },
+
+  // NOVO COMPROMISSO MANUAL & SERVIÇOS DO MEI
+  openNewApptModal() { document.getElementById('modal-appt').classList.add('active'); },
+  submitManualAppt(e) {
+    e.preventDefault();
+    const cliente = document.getElementById('manual-client-name').value;
+    const desc = document.getElementById('manual-service-desc').value;
+    const date = document.getElementById('manual-date').value;
+    const time = document.getElementById('manual-time').value;
+
+    const allAgenda = JSON.parse(localStorage.getItem('agenda_data')) || [];
+    allAgenda.push({
+      id: 'ag_' + Date.now(),
+      proId: this.currentUser.id,
+      clienteNome: cliente,
+      data: date,
+      hora: time,
+      desc: desc,
+      status: 'Confirmado'
+    });
+    localStorage.setItem('agenda_data', JSON.stringify(allAgenda));
+
+    this.closeModal('modal-appt');
+    this.renderAgenda();
+    this.showAlert("Compromisso salvo com sucesso!");
+  },
+
+  openNewServiceModal() { document.getElementById('modal-service').classList.add('active'); },
+  submitNewService(e) {
+    e.preventDefault();
+    const title = document.getElementById('service-title').value;
+    const price = document.getElementById('service-price').value;
+    const duration = document.getElementById('service-duration').value;
+
+    const allServices = JSON.parse(localStorage.getItem('services_data')) || [];
+    allServices.push({ id: 's_' + Date.now(), proId: this.currentUser.id, titulo: title, preco: price, duracao: duration });
+    localStorage.setItem('services_data', JSON.stringify(allServices));
+
+    this.closeModal('modal-service');
+    this.renderProServices();
+    this.showAlert("Novo serviço cadastrado!");
+  },
+
+  renderProServices() {
+    const grid = document.getElementById('pro-services-grid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    
+    const allServices = JSON.parse(localStorage.getItem('services_data')) || [];
+    const myServices = allServices.filter(s => s.proId === this.currentUser.id || s.proId === 'p1');
+
+    myServices.forEach(s => {
+      grid.innerHTML += `
+        <div class="card">
+          <div class="card-title">${s.titulo}</div>
+          <div style="font-size:1.2rem; color:var(--teal); font-weight:bold; margin:6px 0;">R$ ${s.preco}</div>
+          <div class="card-meta">Duração: ${s.duracao}</div>
+          <button class="btn btn-outline btn-sm" onclick="app.showAlert('Serviço editável')">Editar Serviço</button>
+        </div>
+      `;
+    });
+  },
+
+  // CHAT PROFISSIONAL
+  renderChat() {
+    this.activeChatScope = this.currentUser.role;
+    const containerId = this.currentUser.role === 'cliente' ? 'chat-box-client' : 'chat-box-pro';
+    const container = document.getElementById(containerId);
+    
+    let contacts = [];
+    if(this.currentUser.role === 'cliente') {
+      contacts = this.mockPros;
+    } else {
+      contacts = [{ id: 'c1', nome: 'Ana Souza (Cliente)', isBot: true }, { id: 'c2', nome: 'Beatriz Lima (Cliente)', isBot: true }];
+    }
+
+    container.innerHTML = `
+      <div class="chat-sidebar">
+        <div class="chat-sidebar-header">Mensagens</div>
+        <div class="chat-list" id="chat-list-${this.activeChatScope}"></div>
+      </div>
+      <div class="chat-main">
+        <div class="chat-header">
+          <button class="btn-back-chat" onclick="app.closeMobileChat()">&larr;</button>
+          <div class="contact-avatar" style="width:34px; height:34px; font-size:12px;" id="chat-active-avatar">💬</div>
+          <span id="chat-active-name">Selecione uma conversa</span>
+        </div>
+        <div class="chat-messages" id="chat-messages-${this.activeChatScope}">
+          <div style="text-align:center; color:var(--text-muted); margin-top:auto; margin-bottom:auto;">Clique em um contato ao lado para iniciar.</div>
+        </div>
+        <div class="chat-input hidden" id="chat-input-area-${this.activeChatScope}">
+          <input type="text" id="chat-input-${this.activeChatScope}" placeholder="Digite sua mensagem..." onkeypress="if(event.key === 'Enter') app.sendMsg()">
+          <button class="btn btn-primary" onclick="app.sendMsg()">Enviar</button>
+        </div>
+      </div>
+    `;
+
+    const listEl = document.getElementById(`chat-list-${this.activeChatScope}`);
+    contacts.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'chat-contact';
+      el.innerHTML = `
+        <div class="contact-avatar">${c.nome.charAt(0)}<div class="online-badge"></div></div>
+        <div class="contact-info">
+          <div class="contact-name">${c.nome}</div>
+          <div class="contact-last">Clique para responder...</div>
+        </div>
+      `;
+      el.onclick = () => this.openConversation(c, el);
+      listEl.appendChild(el);
+    });
+  },
+
+  openConversation(contact, el) {
+    this.activeChatUser = contact;
+    document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    
+    document.getElementById('chat-active-name').textContent = contact.nome;
+    document.getElementById('chat-active-avatar').textContent = contact.nome.charAt(0);
+    document.getElementById(`chat-input-area-${this.activeChatScope}`).classList.remove('hidden');
+    
+    if(window.innerWidth <= 768) {
+      document.getElementById(`chat-box-${this.activeChatScope}`).classList.add('chat-open');
+    }
+    this.loadMessages();
+  },
+
+  closeMobileChat() {
+    document.getElementById(`chat-box-${this.activeChatScope}`).classList.remove('chat-open');
+  },
+
+  getChatKey() {
+    const ids = [this.currentUser.id, this.activeChatUser.id].sort();
+    return `chat_hist_${ids[0]}_${ids[1]}`;
+  },
+
+  loadMessages() {
+    const msgsEl = document.getElementById(`chat-messages-${this.activeChatScope}`);
+    msgsEl.innerHTML = '';
+    
+    let history = JSON.parse(localStorage.getItem(this.getChatKey())) || [];
+    if(history.length === 0) {
+      history.push({ sender: this.activeChatUser.id, text: `Olá! Sou ${this.activeChatUser.nome}. Como posso te ajudar hoje?` });
+      localStorage.setItem(this.getChatKey(), JSON.stringify(history));
+    }
+
+    history.forEach(m => {
+      const isMe = m.sender === this.currentUser.id;
+      msgsEl.innerHTML += `<div class="msg ${isMe ? 'sent' : 'received'}">${m.text}</div>`;
+    });
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  },
+
+  sendMsg() {
+    const input = document.getElementById(`chat-input-${this.activeChatScope}`);
     const text = input.value.trim();
-    if (!text) return;
-    const window_ = input.closest(scope === 'client' ? '#client-chat' : '#pro-chat').querySelector('.chat-window');
-    const div = document.createElement('div');
-    div.className = 'msg me';
-    div.textContent = text;
-    window_.appendChild(div);
-    window_.scrollTop = window_.scrollHeight;
-    input.value = '';
-  }
-</script>
+    if(!text) return;
 
+    const history = JSON.parse(localStorage.getItem(this.getChatKey())) || [];
+    history.push({ sender: this.currentUser.id, text: text });
+    localStorage.setItem(this.getChatKey(), JSON.stringify(history));
+
+    input.value = '';
+    this.loadMessages();
+
+    if(this.activeChatUser.isBot) {
+      const msgsEl = document.getElementById(`chat-messages-${this.activeChatScope}`);
+      const typing = document.createElement('div');
+      typing.className = 'msg received';
+      typing.id = 'typing';
+      typing.innerHTML = '<em>Digitando...</em>';
+      msgsEl.appendChild(typing);
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+
+      setTimeout(() => {
+        document.getElementById('typing').remove();
+        const reply = this.botReplies[Math.floor(Math.random() * this.botReplies.length)];
+        history.push({ sender: this.activeChatUser.id, text: reply });
+        localStorage.setItem(this.getChatKey(), JSON.stringify(history));
+        this.loadMessages();
+      }, 1500);
+    }
+  }
+};
+
+window.addEventListener('DOMContentLoaded', () => app.init());
+</script>
 </body>
 </html>
